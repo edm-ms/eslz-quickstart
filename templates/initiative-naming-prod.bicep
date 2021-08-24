@@ -6,15 +6,15 @@ param mgtGroupName string            = 'ecorp-prod'
 
 var policyDeployment                 = '${initiativeName}-${guid(time)}'
 var customPolicies                   = [
-                                      json(loadTextContent('policy/naming/prod/policy-prod-privatelink-naming.json'))
-                                      json(loadTextContent('policy/naming/prod/policy-prod-vnet-naming.json'))
-                                      json(loadTextContent('policy/naming/prod/policy-prod-rg-naming.json'))
-                                      json(loadTextContent('policy/naming/prod/policy-prod-sqldb-naming.json'))
-                                      json(loadTextContent('policy/naming/prod/policy-prod-sqlserver-naming.json'))
-                                      json(loadTextContent('policy/naming/prod/policy-prod-keyvault-naming.json'))
-                                      json(loadTextContent('policy/naming/prod/policy-prod-nsg-naming.json'))
-                                      json(loadTextContent('policy/naming/prod/policy-prod-routetable-naming.json'))
-                                      json(loadTextContent('policy/naming/prod/policy-prod-publicip-naming.json'))
+                                      json(loadTextContent('policy/policy-naming-prod-privatelink.json'))
+                                      json(loadTextContent('policy/policy-naming-prod-vnet.json'))
+                                      json(loadTextContent('policy/policy-naming-prod-rg.json'))
+                                      json(loadTextContent('policy/policy-naming-prod-sqldb.json'))
+                                      json(loadTextContent('policy/policy-naming-prod-sqlserver.json'))
+                                      json(loadTextContent('policy/policy-naming-prod-keyvault.json'))
+                                      json(loadTextContent('policy/policy-naming-prod-nsg.json'))
+                                      json(loadTextContent('policy/policy-naming-prod-routetable.json'))
+                                      json(loadTextContent('policy/policy-naming-prod-publicip.json'))
 ]
 
 module namingPolicy 'modules/policy-definition.bicep' = [for policy in customPolicies: {
