@@ -6,7 +6,7 @@ param mgtGrouupName string    = 'prod-ecorp'
 
 var policyDeployment          = '${assignmentName}-${guid(time)}'
 var regions                   = json(loadTextContent('parameters/allowed-regions.json'))
-var initiativeData            = json(loadTextContent('policy/policy-initiative-allowed-regions.json'))
+var initiativeData            = json(loadTextContent('policy/initiative-allowed-regions.json'))
 
 module regionsInitiative 'modules/policy-initiative.bicep' = {
   name: 'regions-${time}'

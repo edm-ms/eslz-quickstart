@@ -4,7 +4,7 @@ param location string               = 'eastus'
 param time string                   = utcNow()
 param mgtGroupName string           = 'prod-ecorp'
 param initiativeDescription string  = 'Create DNS record for PaaS services'
-param networkSubId string           = 'ab0b3a8a-1388-486d-9f00-483365edf8c4'
+param networkSubId string           = '<>'
 
 var adlsDnsPolicy                   = json(loadTextContent('policy/policy-dns-adls.json'))
 var blobDnsPolicy                   = json(loadTextContent('policy/policy-dns-blob.json'))

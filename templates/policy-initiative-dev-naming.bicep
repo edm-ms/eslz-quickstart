@@ -6,9 +6,9 @@ param mgtGroupName string            = 'ecorp-prod'
 
 var policyDeployment                 = '${initiativeName}-${guid(time)}'
 var customPolicies                   = [
-                                      json(loadTextContent('policy/policy-dev-privatelink-naming.json'))
-                                      json(loadTextContent('policy/policy-dev-vnet-naming.json'))
-                                      json(loadTextContent('policy/policy-dev-rg-naming.json'))
+                                      json(loadTextContent('policy/policy-naming-dev-privatelink.json'))
+                                      json(loadTextContent('policy/policy-naming-dev-vnet.json'))
+                                      json(loadTextContent('policy/policy-naming-dev-rg.json'))
 ]
 
 module namingPolicy 'modules/policy-definition.bicep' = [for policy in customPolicies: {
