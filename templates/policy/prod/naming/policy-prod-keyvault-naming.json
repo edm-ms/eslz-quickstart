@@ -1,0 +1,30 @@
+{
+    "mode": "All",
+    "policyName": "Prod-KeyVault-Naming",
+    "policyDisplayName": "Prod Key Vault name convention",
+    "policyDescription": "Enforce production naming convention for Key Vaults",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.KeyVault/vaults"
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "field": "name",
+                  "like": "kv-prd-*"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    },
+    "parameters": {}
+  }

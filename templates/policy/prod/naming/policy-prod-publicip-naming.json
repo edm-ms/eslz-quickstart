@@ -1,0 +1,30 @@
+{
+    "mode": "All",
+    "policyName": "Prod-PublicIP-Naming",
+    "policyDisplayName": "Prod Public IP name convention",
+    "policyDescription": "Enforce production naming convention for Public IPs",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/publicIPAddresses"
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "field": "name",
+                  "like": "pip-prd-*"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    },
+    "parameters": {}
+  }

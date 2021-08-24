@@ -1,0 +1,30 @@
+{
+    "mode": "All",
+    "policyName": "Prod-PL-Naming",
+    "policyDisplayName": "Prod private link name convention",
+    "policyDescription": "Enforce production naming convention for private link",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/privateEndpoints"
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "field": "name",
+                  "like": "pl-prd-*"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    },
+    "parameters": {}
+  }

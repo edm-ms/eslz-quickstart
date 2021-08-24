@@ -1,0 +1,30 @@
+{
+    "mode": "All",
+    "policyName": "Prod-VNet-Naming",
+    "policyDisplayName": "Prod VNet name convention",
+    "policyDescription": "Enforce production naming convention for VNets",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/virtualNetworks"
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "field": "name",
+                  "like": "vnet-prd-*"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    },
+    "parameters": {}
+  }

@@ -1,0 +1,30 @@
+{
+    "mode": "All",
+    "policyName": "Prod-SqlDb-Naming",
+    "policyDisplayName": "Prod Sql database name convention",
+    "policyDescription": "Enforce production naming convention for Sql databases",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Sql/servers/databases"
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "field": "name",
+                  "like": "sqldb-prd-*"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    },
+    "parameters": {}
+  }

@@ -1,0 +1,34 @@
+{
+    "mode": "All",
+    "policyName": "Prod-RG-Naming",
+    "policyDisplayName": "Prod resource group name convention",
+    "policyDescription": "Enforce production naming convention for resource groups",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "field": "name",
+                  "like": "rg-prd-*"
+                },
+                {
+                  "field": "name",
+                  "equals": "NetworkWatcherRG"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    },
+    "parameters": {}
+  }

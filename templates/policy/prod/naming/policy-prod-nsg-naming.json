@@ -1,0 +1,30 @@
+{
+    "mode": "All",
+    "policyName": "Prod-NSG-Naming",
+    "policyDisplayName": "Prod NSG name convention",
+    "policyDescription": "Enforce production naming convention for NSGs",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/networkSecurityGroups"
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "field": "name",
+                  "like": "nsg-prd-*"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    },
+    "parameters": {}
+  }

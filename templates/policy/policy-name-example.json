@@ -1,0 +1,37 @@
+{
+    "mode": "All",
+    "policyName": "PL-Naming",
+    "policyDisplayName": "Private link name convention",
+    "policyDescription": "Enforce naming convention for private link",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Network/privateEndpoints"
+          },
+          {
+          "not": {
+            "count": {
+              "value": "[parameters('allowedNames')]",
+              "name": "allowedName",
+              "where": {
+                "field": "name",
+                "like": "[current('allowedName')]"
+              }
+            },
+            "greater": 0
+          }
+        }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    },
+    "parameters": {
+      "allowedNames": {
+        "type": "Array"
+      }
+    }
+  }
