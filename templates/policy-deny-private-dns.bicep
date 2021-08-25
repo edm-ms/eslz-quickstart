@@ -1,9 +1,9 @@
 targetScope                     = 'managementGroup'
 param time string               = utcNow()
 param assignmentName string     = 'Deny-Private-DNS'
-param policyID string           = '/providers/Microsoft.Management/managementGroups/prod-ecorp/providers/Microsoft.Authorization/policyDefinitions/Deny-Private-DNS-Zones'
+param policyID string           = '/providers/Microsoft.Management/managementGroups/prod/providers/Microsoft.Authorization/policyDefinitions/Deny-Private-DNS-Zones'
 param policyExclusions array   = [
-                                  '/providers/Microsoft.Management/managementGroups/prod-ecorp-connectivity'
+                                  '/providers/Microsoft.Management/managementGroups/prod-connectivity'
                                  ]
 param description string        = 'Deny the creation of private DNS'
 
