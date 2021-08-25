@@ -1,8 +1,8 @@
 {
     "mode": "Indexed",
-    "description": "Create DNS record when Azure mySQL and private link are deployed",
-    "displayName": "Create DNS record when Azure mySQL and private link are deployed",
-    "name": "DNS-MySQL",
+    "description": "Create DNS record when Azure AKS and private link are deployed",
+    "displayName": "Create DNS record when Azure AKS and private link are deployed",
+    "name": "DNS-AKS",
     "policyRule": {
       "if": {
         "allOf": [
@@ -15,7 +15,7 @@
               "field": "Microsoft.Network/privateEndpoints/privateLinkServiceConnections[*].groupIds[*]",
               "where": {
                 "field": "Microsoft.Network/privateEndpoints/privateLinkServiceConnections[*].groupIds[*]",
-                "equals": "mysqlServer"
+                "equals": "tbd"
               }
             },
             "greaterOrEquals": 1
@@ -55,7 +55,7 @@
                     "properties": {
                       "privateDnsZoneConfigs": [
                         {
-                          "name": "mySql-privateDnsZone",
+                          "name": "aks-privateDnsZone",
                           "properties": {
                             "privateDnsZoneId": "[parameters('privateDnsZoneId')]"
                           }

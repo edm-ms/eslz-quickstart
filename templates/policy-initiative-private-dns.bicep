@@ -2,7 +2,7 @@ targetScope                         = 'managementGroup'
 param resourceGroupName string      = 'rg-prd-eus-privatedns'
 param location string               = 'eastus'
 param time string                   = utcNow()
-param mgtGroupName string           = 'prod-ecorp'
+param mgtGroupName string           = 'prod'
 param initiativeDescription string  = 'Create DNS record for PaaS services'
 param networkSubId string           = '<>'
 
@@ -14,23 +14,23 @@ var sqlDnsPolicy                    = json(loadTextContent('policy/policy-dns-sq
 var mySqlDnsPolicy                  = json(loadTextContent('policy/policy-dns-mysql.json'))
 
 var dnsZones                        = {
+                                      acr: 'privatelink.azurecr.io'
                                       adls: 'privatelink.dfs.core.windows.net'
+                                      aksApi: 'privatelink.${location}.azmk8s.io'
+                                      appServ: 'privatelink.azurewebsites.net'
+                                      batch: 'privatelink.${location}.batch.azure.com'
                                       blob: 'privatelink.blob.core.windows.net'
+                                      cosmos: 'privatelink.documents.azure.com'
                                       file: 'privatelink.file.core.windows.net'
+                                      fileSync: 'privatelink.afs.azure.net'
+                                      keyvault: 'privatelink.vaultcore.azure.net'
+                                      mySql: 'privatelink.mysql.database.azure.com'
                                       postgres: 'privatelink.postgres.database.azure.com'
                                       sql: 'privatelink.database.windows.net'
-                                      keyvault: 'privatelink.vaultcore.azure.net'
-                                      acr: 'privatelink.azurecr.io'
-                                      appServ: 'privatelink.azurewebsites.net'
                                       synapse: 'privatelink.sql.azuresynapse.net'
-                                      fileSync: 'privatelink.afs.azure.net'
-                                      cosmos: 'privatelink.documents.azure.com'
-                                      batch: 'privatelink.${location}.batch.azure.com'
-                                      mySql: 'privatelink.mysql.database.azure.com'
                                       }
 
-
-                                      module rg 'modules/resource-group.bicep' = {
+module rg 'modules/resource-group.bicep' = {
   scope: subscription(networkSubId)
   name: 'dnsrg-${time}'
   params: {
@@ -273,7 +273,7 @@ resource policyInitiative 'Microsoft.Authorization/policySetDefinitions@2020-09-
       mySqlDnsId: {
         type: 'String'
         defaultValue: ''
-      } 
+      }
     }
     policyDefinitions: [
       {

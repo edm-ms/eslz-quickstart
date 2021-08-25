@@ -1,5 +1,18 @@
 param name string
 param location string = resourceGroup().location
+  @allowed([
+    'Standard_LRS'
+    'Standard_GRS'
+    'Premium_LRS'
+    'Premium_GRS'
+  ])
+param skuName string
+param firewallRules array = [
+  {
+    action: 'Allow'
+    value: '1.1.1.1'
+  }
+]
 
 resource storage 'Microsoft.Storage/storageAccounts@2021-02-01' = {
  name: name
@@ -10,17 +23,12 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-02-01' = {
    minimumTlsVersion: 'TLS1_2'
    networkAcls: {
      defaultAction: 'Deny'
-     ipRules: [
-       {
-         action: 'Allow'
-         value: '73.102.9.215'
-       }
-     ]
+     ipRules: firewallRules
    }
  }
  kind: 'StorageV2'
  sku: {
-   name: 'Standard_LRS'
+   name: skuName
  }
 }
 

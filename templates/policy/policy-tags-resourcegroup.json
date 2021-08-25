@@ -45,6 +45,10 @@
                 {
                   "field": "name",
                   "like": "IT_*"
+                },
+                {
+                  "field": "name",
+                  "like": "cloud-shell-storage*"
                 }
               ]
             }

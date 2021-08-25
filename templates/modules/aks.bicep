@@ -1,5 +1,5 @@
 param clusterName string
-param nodeCount int = 1
+param nodeCount int = 3
 param vmSize string = 'Standard_Ds2_v2'
 param aksSubnet string
 param aksVersion string
