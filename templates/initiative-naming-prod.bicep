@@ -2,7 +2,7 @@ targetScope                          = 'managementGroup'
 param time string                    = utcNow()
 param initiativeDescription string   = 'Production naming convention for resources'
 param initiativeName string          = 'Prod-Naming'
-param mgtGroupName string            = 'ecorp-prod'
+param mgtGroupName string            = 'prod'
 
 var policyDeployment                 = '${initiativeName}-${guid(time)}'
 var customPolicies                   = [
@@ -21,6 +21,7 @@ module namingPolicy 'modules/policy-definition.bicep' = [for policy in customPol
   name: policy.policyName
   params: {
     managementGroupName: mgtGroupName
+    mode: policy.mode
     policyDescription: policy.policyDescription
     policyDisplayName: policy.policyDisplayName
     policyName: policy.policyName

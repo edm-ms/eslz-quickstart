@@ -2,7 +2,7 @@ targetScope                   = 'managementGroup'
 param time string             = utcNow()
 param initiativeName string   = 'Allowed Regions'
 param assignmentName string   = 'Allowed-Regions'
-param mgtGrouupName string    = 'prod-ecorp'
+param mgtGrouupName string    = 'prod'
 
 var policyDeployment          = '${assignmentName}-${guid(time)}'
 var regions                   = json(loadTextContent('parameters/allowed-regions.json'))
