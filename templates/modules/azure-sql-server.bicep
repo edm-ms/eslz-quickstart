@@ -1,8 +1,7 @@
 param sqlServerName string
 param location string = resourceGroup().location
-
-var sqlAdminGroupName = 'Azure-SQL-DBA'
-var sqlAdminGroupObjectId = 'ed6e72c7-3fd2-4629-af4c-4672fe306a24'
+param sqlAdminGroupName string 
+param sqlAdminGroupObjectId string
 
 resource sqlserver 'Microsoft.Sql/servers@2021-02-01-preview' = {
   name: sqlServerName

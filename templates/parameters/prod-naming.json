@@ -1,0 +1,42 @@
+[
+  {
+    "nameFormat": "kv-prod-*",
+    "resource": "Key Vaults",
+    "resourceType": "Microsoft.KeyVault/vaults"
+  },
+  {
+    "nameFormat": "nsg-prod-*",
+    "resource": "Network Security Groups",
+    "resourceType": "Microsoft.Network/networkSecurityGroups"
+  },
+  {
+    "nameFormat": "pip-prod-*",
+    "resource": "Public IP Addresses",
+    "resourceType": "Microsoft.Network/publicIPAddresses"
+  },
+  {
+    "nameFormat": "pl-prod-*",
+    "resource": "Private Link",
+    "resourceType": "Microsoft.Network/privateEndpoints"
+  },
+  {
+    "nameFormat": "rt-prod-*",
+    "resource": "Route Tables",
+    "resourceType": "Microsoft.Network/routeTables"
+  },
+  {
+    "nameFormat": "sqldb-prod-*",
+    "resource": "SQL Databases",
+    "resourceType": "Microsoft.Sql/servers/databases"
+  },
+  {
+    "nameFormat": "sqlsrv-prod-*",
+    "resource": "SQL Servers",
+    "resourceType": "Microsoft.Sql/servers"
+  },
+  {
+    "nameFormat": "vnet-prod-*",
+    "resource": "Virtual Networks",
+    "resourceType": "Microsoft.Network/virtualNetworks"
+  }
+]
