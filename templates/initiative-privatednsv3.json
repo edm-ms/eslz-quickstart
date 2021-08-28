@@ -1,0 +1,621 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.613.9944",
+      "templateHash": "7884550305872082761"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[deployment().location]"
+    },
+    "resourceGroupName": {
+      "type": "string",
+      "defaultValue": "rg-canary-eus-privatedns"
+    },
+    "managementGroupName": {
+      "type": "string",
+      "defaultValue": "canary"
+    },
+    "time": {
+      "type": "string",
+      "defaultValue": "[utcNow()]"
+    },
+    "networkSubId": {
+      "type": "string",
+      "defaultValue": "a3367904-e681-41a9-bc4a-f7a4e372d380"
+    }
+  },
+  "functions": [],
+  "variables": {
+    "dnsZoneParameters": "[json('[\r\n    {\r\n      \"resource\": \"ACR\",\r\n      \"zoneName\": \"privatelink.azurecr.io\",\r\n      \"groupId\": \"registry\"\r\n    },\r\n    {\r\n      \"resource\": \"ADLS\",\r\n      \"zoneName\": \"privatelink.dfs.core.windows.net\",\r\n      \"groupId\": \"dfs\"\r\n    },\r\n    {\r\n      \"resource\": \"AKS-EastUs\",\r\n      \"zoneName\": \"privatelink.eastus.azmk8s.io\",\r\n      \"groupId\": \"tbd\"\r\n    },\r\n    {\r\n      \"resource\": \"AKS-EastUs2\",\r\n      \"zoneName\": \"privatelink.eastus2.azmk8s.io\",\r\n      \"groupId\": \"tbd\"\r\n    },\r\n    {\r\n      \"resource\": \"AKS-WestUs\",\r\n      \"zoneName\": \"privatelink.westus.azmk8s.io\",\r\n      \"groupId\": \"tbd\"\r\n    },\r\n    {\r\n      \"resource\": \"AppService\",\r\n      \"zoneName\": \"privatelink.azurewebsites.net\",\r\n      \"groupId\": \"sites\"\r\n    },\r\n    {\r\n      \"resource\": \"Batch-EastUs\",\r\n      \"zoneName\": \"privatelink.eastus.batch.azure.com\",\r\n      \"groupId\": \"tbd2\"\r\n    },\r\n    {\r\n      \"resource\": \"Batch-WestUs\",\r\n      \"zoneName\": \"privatelink.westus.batch.azure.com\",\r\n      \"groupId\": \"tbd2\"\r\n    },\r\n    {\r\n      \"resource\": \"Blob\",\r\n      \"zoneName\": \"privatelink.blob.core.windows.net\",\r\n      \"groupId\": \"blob\"\r\n    },\r\n    {\r\n      \"resource\": \"Cosmos\",\r\n      \"zoneName\": \"privatelink.documents.azure.com\",\r\n      \"groupId\": \"sql\"\r\n    },\r\n    {\r\n      \"resource\": \"File\",\r\n      \"zoneName\": \"privatelink.file.core.windows.net\",\r\n      \"groupId\": \"file\"\r\n    },\r\n    {\r\n      \"resource\": \"FileSync\",\r\n      \"zoneName\": \"privatelink.afs.azure.net\",\r\n      \"groupId\": \"afs\"\r\n    },\r\n    {\r\n      \"resource\": \"KeyVault\",\r\n      \"zoneName\": \"privatelink.vaultcore.azure.net\",\r\n      \"groupId\": \"vault\"\r\n    },\r\n    {\r\n      \"resource\": \"MySQL\",\r\n      \"zoneName\": \"privatelink.mysql.database.azure.com\",\r\n      \"groupId\": \"mysqlServer\"\r\n    },\r\n    {\r\n      \"resource\": \"PostgreSQL\",\r\n      \"zoneName\": \"privatelink.postgres.database.azure.com\",\r\n      \"groupId\": \"postgresqlServer\"\r\n    },\r\n    {\r\n      \"resource\": \"SQL\",\r\n      \"zoneName\": \"privatelink.database.windows.net\",\r\n      \"groupId\": \"SQLServer\"\r\n    },\r\n    {\r\n      \"resource\": \"Synapse\",\r\n      \"zoneName\": \"privatelink.sql.azuresynapse.net\",\r\n      \"groupId\": \"Dev\"\r\n    }\r\n  ]')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/policySetDefinitions",
+      "apiVersion": "2020-09-01",
+      "name": "Private-DNS-PaaS",
+      "properties": {
+        "copy": [
+          {
+            "name": "policyDefinitions",
+            "count": "[length(range(0, length(variables('dnsZoneParameters'))))]",
+            "input": {
+              "policyDefinitionId": "[format('/providers/Microsoft.Management/managementGroups/{0}/providers/{1}', parameters('managementGroupName'), reference(format('Microsoft.Resources/deployments/{0}', format('DNS-Policy-{0}-{1}', variables('dnsZoneParameters')[range(0, length(variables('dnsZoneParameters')))[range(0, length(variables('dnsZoneParameters')))[copyIndex('policyDefinitions')]]].resource, parameters('time'))), '2019-10-01').outputs.policyId.value)]",
+              "policyDefinitionReferenceId": "[format('{0}-Private-DNS', variables('dnsZoneParameters')[range(0, length(variables('dnsZoneParameters')))[copyIndex('policyDefinitions')]].resource)]",
+              "parameters": {
+                "privateDnsZoneId": {
+                  "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('networkSubId'), parameters('resourceGroupName')), 'Microsoft.Resources/deployments', format('DNS-Zone-{0}', variables('dnsZoneParameters')[range(0, length(variables('dnsZoneParameters')))[range(0, length(variables('dnsZoneParameters')))[copyIndex('policyDefinitions')]]].resource)), '2019-10-01').outputs.zoneId.value]"
+                }
+              }
+            }
+          }
+        ],
+        "displayName": "Create DNS record for PaaS services",
+        "description": "Create DNS record for PaaS services",
+        "parameters": {}
+      },
+      "dependsOn": [
+        "dnsPolicy",
+        "privateDnsZones"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "[format('PrivateDNS-ResourceGroup-{0}', parameters('time'))]",
+      "subscriptionId": "[parameters('networkSubId')]",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "resourceGroupName": {
+            "value": "[parameters('resourceGroupName')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.613.9944",
+              "templateHash": "8626719433759107488"
+            }
+          },
+          "parameters": {
+            "resourceGroupName": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Resources/resourceGroups",
+              "apiVersion": "2021-04-01",
+              "name": "[parameters('resourceGroupName')]",
+              "location": "[parameters('location')]"
+            }
+          ],
+          "outputs": {
+            "resourceGroupId": {
+              "type": "string",
+              "value": "[subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "copy": {
+        "name": "privateDnsZones",
+        "count": "[length(range(0, length(variables('dnsZoneParameters'))))]"
+      },
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "[format('DNS-Zone-{0}', variables('dnsZoneParameters')[range(0, length(variables('dnsZoneParameters')))[copyIndex()]].resource)]",
+      "subscriptionId": "[parameters('networkSubId')]",
+      "resourceGroup": "[parameters('resourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "dnsZone": {
+            "value": "[variables('dnsZoneParameters')[range(0, length(variables('dnsZoneParameters')))[copyIndex()]].zoneName]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.613.9944",
+              "templateHash": "5391357507470673575"
+            }
+          },
+          "parameters": {
+            "dnsZone": {
+              "type": "string"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Network/privateDnsZones",
+              "apiVersion": "2018-09-01",
+              "name": "[parameters('dnsZone')]",
+              "location": "global",
+              "properties": {}
+            }
+          ],
+          "outputs": {
+            "zoneId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/privateDnsZones', parameters('dnsZone'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId(parameters('networkSubId'), 'Microsoft.Resources/deployments', format('PrivateDNS-ResourceGroup-{0}', parameters('time')))]"
+      ]
+    },
+    {
+      "copy": {
+        "name": "dnsPolicy",
+        "count": "[length(range(0, length(variables('dnsZoneParameters'))))]"
+      },
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "[format('DNS-Policy-{0}-{1}', variables('dnsZoneParameters')[range(0, length(variables('dnsZoneParameters')))[copyIndex()]].resource, parameters('time'))]",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[variables('dnsZoneParameters')[range(0, length(variables('dnsZoneParameters')))[copyIndex()]].resource]"
+          },
+          "groupId": {
+            "value": "[variables('dnsZoneParameters')[range(0, length(variables('dnsZoneParameters')))[copyIndex()]].groupId]"
+          },
+          "description": {
+            "value": "[format('Create DNS record when {0} and private link are deployed', variables('dnsZoneParameters')[range(0, length(variables('dnsZoneParameters')))[copyIndex()]].resource)]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.613.9944",
+              "templateHash": "2497778864334685379"
+            }
+          },
+          "parameters": {
+            "groupId": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "defaultValue": "Indexed"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/policyDefinitions",
+              "apiVersion": "2020-09-01",
+              "name": "[parameters('name')]",
+              "properties": {
+                "description": "[parameters('description')]",
+                "displayName": "[parameters('description')]",
+                "mode": "[parameters('mode')]",
+                "policyRule": {
+                  "if": {
+                    "allOf": [
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Network/privateEndpoints"
+                      },
+                      {
+                        "count": {
+                          "field": "Microsoft.Network/privateEndpoints/privateLinkServiceConnections[*].groupIds[*]",
+                          "where": {
+                            "field": "Microsoft.Network/privateEndpoints/privateLinkServiceConnections[*].groupIds[*]",
+                            "equals": "[parameters('groupId')]"
+                          }
+                        },
+                        "greaterOrEquals": 1
+                      }
+                    ]
+                  },
+                  "then": {
+                    "effect": "[[parameters('effect')]",
+                    "details": {
+                      "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+                      "roleDefinitionIds": [
+                        "/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7"
+                      ],
+                      "deployment": {
+                        "properties": {
+                          "mode": "incremental",
+                          "template": {
+                            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                              "privateDnsZoneId": {
+                                "type": "string"
+                              },
+                              "privateEndpointName": {
+                                "type": "string"
+                              },
+                              "location": {
+                                "type": "string"
+                              }
+                            },
+                            "resources": [
+                              {
+                                "name": "[[concat(parameters('privateEndpointName'), '/deployedByPolicy')]",
+                                "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+                                "apiVersion": "2020-03-01",
+                                "location": "[[parameters('location')]",
+                                "properties": {
+                                  "privateDnsZoneConfigs": [
+                                    {
+                                      "name": "[format('{0}-Private-DNS', parameters('name'))]",
+                                      "properties": {
+                                        "privateDnsZoneId": "[[parameters('privateDnsZoneId')]"
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "parameters": {
+                            "privateDnsZoneId": {
+                              "value": "[[parameters('privateDnsZoneId')]"
+                            },
+                            "privateEndpointName": {
+                              "value": "[[field('name')]"
+                            },
+                            "location": {
+                              "value": "[[field('location')]"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "parameters": {
+                  "privateDnsZoneId": {
+                    "type": "String"
+                  },
+                  "effect": {
+                    "type": "String",
+                    "allowedValues": [
+                      "DeployIfNotExists",
+                      "Disabled"
+                    ],
+                    "defaultValue": "DeployIfNotExists"
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "policyId": {
+              "type": "string",
+              "value": "[format('Microsoft.Authorization/policyDefinitions/{0}', parameters('name'))]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "pause-for-initiative",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.613.9944",
+              "templateHash": "2479625258269540056"
+            }
+          },
+          "parameters": {
+            "time": {
+              "type": "string",
+              "defaultValue": "[utcNow()]"
+            }
+          },
+          "functions": [],
+          "variables": {
+            "uniqueName": "[guid(parameters('time'))]"
+          },
+          "resources": [
+            {
+              "copy": {
+                "name": "delayLoop",
+                "count": "[length(range(0, 10))]",
+                "mode": "serial",
+                "batchSize": 1
+              },
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2021-04-01",
+              "name": "[format('{0}-{1}', variables('uniqueName'), range(0, 10)[copyIndex()])]",
+              "location": "[deployment().location]",
+              "properties": {
+                "mode": "Incremental",
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {},
+                  "resources": [],
+                  "outputs": {}
+                }
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[format('Microsoft.Authorization/policySetDefinitions/{0}', 'Private-DNS-PaaS')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "assign-initiative-DNS",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "policyAssignmentEnforcementMode": {
+            "value": "Default"
+          },
+          "policyAssignmentName": {
+            "value": "Private-DNS-PaaS"
+          },
+          "policyDescription": {
+            "value": "Create DNS record for PaaS services"
+          },
+          "policyDefinitionId": {
+            "value": "[format('/providers/Microsoft.Management/managementGroups/{0}/providers/{1}', parameters('managementGroupName'), format('Microsoft.Authorization/policySetDefinitions/{0}', 'Private-DNS-PaaS'))]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.613.9944",
+              "templateHash": "13638287202042673551"
+            }
+          },
+          "parameters": {
+            "policyAssignmentEnforcementMode": {
+              "type": "string",
+              "allowedValues": [
+                "Default",
+                "DoNotEnforce"
+              ],
+              "metadata": {
+                "description": "Input will determine if the policyAssignment should be enforced or not."
+              }
+            },
+            "policyDefinitionId": {
+              "type": "string"
+            },
+            "policyAssignmentName": {
+              "type": "string"
+            },
+            "policyDescription": {
+              "type": "string"
+            },
+            "policyParameters": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "exclusions": {
+              "type": "array",
+              "defaultValue": []
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/policyAssignments",
+              "apiVersion": "2020-09-01",
+              "name": "[parameters('policyAssignmentName')]",
+              "identity": {
+                "type": "SystemAssigned"
+              },
+              "location": "[deployment().location]",
+              "properties": {
+                "description": "[parameters('policyDescription')]",
+                "displayName": "[parameters('policyDescription')]",
+                "policyDefinitionId": "[parameters('policyDefinitionId')]",
+                "enforcementMode": "[parameters('policyAssignmentEnforcementMode')]",
+                "parameters": "[parameters('policyParameters')]",
+                "notScopes": "[parameters('exclusions')]"
+              }
+            }
+          ],
+          "outputs": {
+            "policyIdentity": {
+              "type": "string",
+              "value": "[reference(format('Microsoft.Authorization/policyAssignments/{0}', parameters('policyAssignmentName')), '2020-09-01', 'full').identity.principalId]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[format('Microsoft.Authorization/policySetDefinitions/{0}', 'Private-DNS-PaaS')]",
+        "[format('Microsoft.Resources/deployments/{0}', 'pause-for-initiative')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "pause-for-assignment",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.613.9944",
+              "templateHash": "2479625258269540056"
+            }
+          },
+          "parameters": {
+            "time": {
+              "type": "string",
+              "defaultValue": "[utcNow()]"
+            }
+          },
+          "functions": [],
+          "variables": {
+            "uniqueName": "[guid(parameters('time'))]"
+          },
+          "resources": [
+            {
+              "copy": {
+                "name": "delayLoop",
+                "count": "[length(range(0, 10))]",
+                "mode": "serial",
+                "batchSize": 1
+              },
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2021-04-01",
+              "name": "[format('{0}-{1}', variables('uniqueName'), range(0, 10)[copyIndex()])]",
+              "location": "[deployment().location]",
+              "properties": {
+                "mode": "Incremental",
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {},
+                  "resources": [],
+                  "outputs": {}
+                }
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[format('Microsoft.Resources/deployments/{0}', 'assign-initiative-DNS')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "assign-role-NetworkContributor",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "assignmentName": {
+            "value": "Policy-PrivateDNS"
+          },
+          "principalId": {
+            "value": "[reference(format('Microsoft.Resources/deployments/{0}', 'assign-initiative-DNS'), '2019-10-01').outputs.policyIdentity.value]"
+          },
+          "roleId": {
+            "value": "4d97b98b-1d4f-4787-a291-c67834d212e7"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.613.9944",
+              "templateHash": "15972102720059419687"
+            }
+          },
+          "parameters": {
+            "roleId": {
+              "type": "string"
+            },
+            "assignmentName": {
+              "type": "string"
+            },
+            "principalId": {
+              "type": "string"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-08-01-preview",
+              "name": "[guid(parameters('roleId'), parameters('assignmentName'))]",
+              "properties": {
+                "principalType": "ServicePrincipal",
+                "roleDefinitionId": "[format('/providers/Microsoft.Authorization/roleDefinitions/{0}', parameters('roleId'))]",
+                "principalId": "[parameters('principalId')]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[format('Microsoft.Resources/deployments/{0}', 'assign-initiative-DNS')]",
+        "[format('Microsoft.Resources/deployments/{0}', 'pause-for-assignment')]"
+      ]
+    }
+  ]
+}

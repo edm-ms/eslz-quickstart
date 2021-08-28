@@ -1,10 +1,12 @@
 targetScope                         = 'managementGroup'
-param resourceGroupName string      = 'rg-prd-eus-privatedns'
+param resourceGroupName string      = 'rg-canary-eus-privatedns'
 param location string               = 'eastus'
 param time string                   = utcNow()
-param mgtGroupName string           = 'prod'
+param mgtGroupName string           = 'canary'
 param initiativeDescription string  = 'Create DNS record for PaaS services'
-param networkSubId string           = 'ab0b3a8a-1388-486d-9f00-483365edf8c4'
+param networkSubId string           = 'a3367904-e681-41a9-bc4a-f7a4e372d380'
+
+var policyDeployment                = '${initiativeDescription}-${guid(time)}'
 
 var adlsDnsPolicy                   = json(loadTextContent('policy/policy-dns-adls.json'))
 var blobDnsPolicy                   = json(loadTextContent('policy/policy-dns-blob.json'))
@@ -401,7 +403,7 @@ resource policyInitiative 'Microsoft.Authorization/policySetDefinitions@2020-09-
 }
 
 module dnsAssignPolicy 'modules/policy-assign.bicep' = {
-  name: 'assignDNSPolicy-${time}'
+  name: policyDeployment
   params: {
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: 'Private-DNS-PaaS'
