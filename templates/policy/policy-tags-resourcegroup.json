@@ -1,0 +1,71 @@
+{
+    "mode": "All",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "field": "[concat('tags[', parameters('tagName'), ']')]",
+            "exists": "false"
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "field": "name",
+                  "equals": "NetworkWatcherRG"
+                },
+                {
+                  "field": "name",
+                  "like": "site-recovery-vault-rg*"
+                },
+                {
+                  "field": "name",
+                  "like": "*-asr"
+                },
+                {
+                  "field": "name",
+                  "like": "AzureBackupRG_*"
+                },
+                {
+                  "field": "name",
+                  "like": "DefaultResourceGroup-*"
+                },
+                {
+                  "field": "name",
+                  "like": "databricks-rg-*"
+                },
+                {
+                  "field": "name",
+                  "like": "synapseworkspace-managedrg-*"
+                },
+                {
+                  "field": "name",
+                  "like": "IT_*"
+                },
+                {
+                  "field": "name",
+                  "like": "cloud-shell-storage*"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    },
+    "parameters": {
+      "tagName": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag Name",
+          "description": "Name of the tag, such as 'environment'"
+        }
+      }
+    }
+  }
