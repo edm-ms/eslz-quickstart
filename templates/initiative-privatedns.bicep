@@ -6,6 +6,7 @@ param managementGroupName string      = 'canary'
 param time string                     = utcNow()
 
 var dnsZoneParameters                 = json(loadTextContent('parameters/private-dns.json'))
+var privateDNSPolicy                  = json(loadTextContent('policy/policy-deny-privatelinkdns.json'))
 var location                          = deployment().location
 
 module dnsResourceGroup 'modules/resource-group.bicep' = {
@@ -14,6 +15,38 @@ module dnsResourceGroup 'modules/resource-group.bicep' = {
   params: {
     location: location
     resourceGroupName: dnsResourceGroupName 
+  }
+}
+
+module denyPrivateDns 'modules/policy-definition.bicep' = {
+  name: 'create-denyPrivateDNS-policy'
+  params: {
+    managementGroupName: managementGroupName
+    policyDescription: privateDNSPolicy.Description
+    policyDisplayName: privateDNSPolicy.DisplayName
+    policyName: privateDNSPolicy.Name
+    policyParameters: privateDNSPolicy.parameters
+    policyRule: privateDNSPolicy.policyRule
+    mode: privateDNSPolicy.mode
+  }
+}
+
+module delayForDnsPolicy 'modules/delay.bicep' = {
+  name: 'delay-PrivateDNS'
+}
+module assignDenyDns 'modules/policy-assign.bicep' = {
+  name: 'assign-deny-PrivateDNS'
+  dependsOn: [
+    delayForDnsPolicy
+  ]
+  params: {
+    policyAssignmentEnforcementMode: 'Default'
+    policyAssignmentName: privateDNSPolicy.Name
+    policyDefinitionId: denyPrivateDns.outputs.policyId
+    policyDescription: privateDNSPolicy.Description
+    exclusions: [
+      '/providers/Microsoft.Management/managementGroups/${managementGroupName}-connectivity'
+    ]
   }
 }
 
