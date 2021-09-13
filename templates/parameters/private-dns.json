@@ -12,12 +12,12 @@
     {
       "resource": "AKS-EastUs",
       "zoneName": "privatelink.eastus.azmk8s.io",
-      "groupId": "tbd"
+      "groupId": "management"
     },
     {
       "resource": "AKS-WestUs",
       "zoneName": "privatelink.westus.azmk8s.io",
-      "groupId": "tbd"
+      "groupId": "management"
     },
     {
       "resource": "AppService",
@@ -27,12 +27,12 @@
     {
       "resource": "Batch-EastUs",
       "zoneName": "privatelink.eastus.batch.azure.com",
-      "groupId": "tbd2"
+      "groupId": "batchAccount"
     },
     {
       "resource": "Batch-WestUs",
       "zoneName": "privatelink.westus.batch.azure.com",
-      "groupId": "tbd2"
+      "groupId": "batchAccount"
     },
     {
       "resource": "Blob",
