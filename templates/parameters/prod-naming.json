@@ -1,8 +1,108 @@
 [
   {
+    "nameFormat": "ase-prod-*",
+    "resource": "App Service Environment",
+    "resourceType": "Microsoft.Web/hostingEnvironments"
+  },
+  {
+    "nameFormat": "asp-prod-*",
+    "resource": "App Service Plan",
+    "resourceType": "Microsoft.Web/serverfarms"
+  },
+  {
+    "nameFormat": "agw-prod-*",
+    "resource": "Application Gateway",
+    "resourceType": "Microsoft.Network/applicationGateways"
+  },
+  {
+    "nameFormat": "asg-prod-*",
+    "resource": "Application Security Groups",
+    "resourceType": "Microsoft.Network/applicationSecurityGroups"
+  },
+  {
+    "nameFormat": "as-prod-*",
+    "resource": "Availability Sets",
+    "resourceType": "Microsoft.Compute/availabilitySets"
+  },
+  {
+    "nameFormat": "azb-prod-*",
+    "resource": "Azure Bastion",
+    "resourceType": "Microsoft.Network/bastionHosts"
+  },
+  {
+    "nameFormat": "acr-prod-*",
+    "resource": "Azure Container Registry",
+    "resourceType": "Microsoft.ContainerRegistry/registries"
+  },
+  {
+    "nameFormat": "adf-prod-*",
+    "resource": "Azure Data Factory",
+    "resourceType": "Microsoft.DataFactory/factories"
+  },
+  {
+    "nameFormat": "adb-prod-*",
+    "resource": "Azure Databricks",
+    "resourceType": "Microsoft.Databricks/workspaces"
+  },
+  {
+    "nameFormat": "azfw-prod-*",
+    "resource": "Azure Firewall",
+    "resourceType": "Microsoft.Network/azureFirewalls"
+  },
+  {
+    "nameFormat": "afd-prod-*",
+    "resource": "Azure Front Door",
+    "resourceType": "Microsoft.Network/frontDoors"
+  },
+  {
+    "nameFormat": "aks-prod-*",
+    "resource": "Azure Kubernetes Service",
+    "resourceType": "Microsoft.ContainerService/managedClusters"
+  },
+  {
+    "nameFormat": "alb-prod-*",
+    "resource": "Azure Load Balancer",
+    "resourceType": "Microsoft.Network/loadBalancers"
+  },
+  {
+    "nameFormat": "ehc-prod-*",
+    "resource": "Event Hub Cluster",
+    "resourceType": "Microsoft.EventHub/clusters"
+  },
+  {
+    "nameFormat": "ehn-prod-*",
+    "resource": "Event Hub Namespace",
+    "resourceType": "Microsoft.EventHub/namespaces"
+  },
+  {
+    "nameFormat": "erc-prod-*",
+    "resource": "ExpressRoute Circuit",
+    "resourceType": "Microsoft.Network/expressRouteCircuits"
+  },
+  {
+    "nameFormat": "erg-prod-*",
+    "resource": "ExpressRoute Gateway",
+    "resourceType": "Microsoft.Network/expressRouteGateways"
+  },
+  {
+    "nameFormat": "fwp-prod-*",
+    "resource": "Firewall Policy",
+    "resourceType": "Microsoft.Network/firewallPolicies"
+  },
+  {
+    "nameFormat": "iot-prod-*",
+    "resource": "IoT Hub",
+    "resourceType": "Microsoft.Devices/IotHubs"
+  },
+  {
     "nameFormat": "kv-prod-*",
     "resource": "Key Vaults",
     "resourceType": "Microsoft.KeyVault/vaults"
+  },
+  {
+    "nameFormat": "law-prod-*",
+    "resource": "Log Analytics Workspace",
+    "resourceType": "Microsoft.OperationalInsights/workspaces"
   },
   {
     "nameFormat": "nsg-prod-*",
@@ -10,14 +110,19 @@
     "resourceType": "Microsoft.Network/networkSecurityGroups"
   },
   {
+    "nameFormat": "pl-prod-*",
+    "resource": "Private Link",
+    "resourceType": "Microsoft.Network/privateEndpoints"
+  },
+  {
     "nameFormat": "pip-prod-*",
     "resource": "Public IP Addresses",
     "resourceType": "Microsoft.Network/publicIPAddresses"
   },
   {
-    "nameFormat": "pl-prod-*",
-    "resource": "Private Link",
-    "resourceType": "Microsoft.Network/privateEndpoints"
+    "nameFormat": "rsv-prod-*",
+    "resource": "Recovery Services Vault",
+    "resourceType": "Microsoft.RecoveryServices/vaults"
   },
   {
     "nameFormat": "rt-prod-*",
@@ -35,8 +140,63 @@
     "resourceType": "Microsoft.Sql/servers"
   },
   {
+    "nameFormat": "sb-prod-*",
+    "resource": "Service Bus",
+    "resourceType": "Microsoft.ServiceBus/namespaces"
+  },
+  {
+    "nameFormat": "sig-prod-*",
+    "resource": "Shared Image Gallery",
+    "resourceType": "Microsoft.Compute/galleries"
+  },
+  {
+    "nameFormat": "syn-prod-*",
+    "resource": "Synapse",
+    "resourceType": "Microsoft.Synapse/workspaces"
+  },
+  {
+    "nameFormat": "tmp-prod-*",
+    "resource": "Traffic Manager Profile",
+    "resourceType": "Microsoft.Network/trafficmanagerprofiles"
+  },
+  {
+    "nameFormat": "uai-prod-*",
+    "resource": "User Assigned Identity",
+    "resourceType": "Microsoft.ManagedIdentity/userAssignedIdentities"
+  },
+  {
+    "nameFormat": "vpng-prod-*",
+    "resource": "VPN Gateway",
+    "resourceType": "Microsoft.Network/vpnGateways"
+  },
+  {
+    "nameFormat": "img-prod-*",
+    "resource": "Virtual Machine Images",
+    "resourceType": "Microsoft.Compute/images"
+  },
+  {
+    "nameFormat": "vmss-prod-*",
+    "resource": "Virtual Machine Scale Sets",
+    "resourceType": "Microsoft.Compute/virtualMachineScaleSets/virtualmachines"
+  },
+  {
+    "nameFormat": "vng-prod-*",
+    "resource": "Virtual Network Gateway",
+    "resourceType": "Microsoft.Network/virtualNetworkGateways"
+  },
+  {
     "nameFormat": "vnet-prod-*",
     "resource": "Virtual Networks",
     "resourceType": "Microsoft.Network/virtualNetworks"
+  },
+  {
+    "nameFormat": "vw-prod-*",
+    "resource": "Virtual WAN",
+    "resourceType": "Microsoft.Network/virtualWans"
+  },
+  {
+    "nameFormat": "vwh-prod-*",
+    "resource": "Virtual WAN Hub",
+    "resourceType": "Microsoft.Network/virtualHubs"
   }
 ]
