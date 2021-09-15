@@ -2,7 +2,7 @@ targetScope                           = 'managementGroup'
 
 param dnsResourceGroupName string     = '<>'
 param networkSubId string             = '<>'
-param managementGroupName string      = 'canary'
+param managementGroupName string      = 'prod'
 param time string                     = utcNow()
 
 var dnsZoneParameters                 = json(loadTextContent('parameters/private-dns.json'))
@@ -115,7 +115,7 @@ module delayForAssignment 'modules/delay.bicep' = {
   ]
 }
 
-module assignRole 'modules/role-assign.bicep' = {
+module assignRole 'modules/role-assign-managementgroup.bicep' = {
   name: 'assign-role-NetworkContributor'
   dependsOn: [
     delayForAssignment
@@ -124,5 +124,6 @@ module assignRole 'modules/role-assign.bicep' = {
     assignmentName: 'Policy-PrivateDNS'
     principalId: assignInitiative.outputs.policyIdentity
     roleId: '4d97b98b-1d4f-4787-a291-c67834d212e7'
+    principalType: 'ServicePrincipal'
   }
 }

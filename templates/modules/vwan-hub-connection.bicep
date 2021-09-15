@@ -1,5 +1,5 @@
 param purpose string
-param routeTable string 
+param routeTableId string 
 param vnetId string
 param hubName string
 
@@ -11,7 +11,7 @@ resource connection 'Microsoft.Network/virtualHubs/hubVirtualNetworkConnections@
    enableInternetSecurity:true
    routingConfiguration:{
      associatedRouteTable:{
-       id: routeTable
+       id: routeTableId
      }
      propagatedRouteTables:{
        labels:[
@@ -19,7 +19,7 @@ resource connection 'Microsoft.Network/virtualHubs/hubVirtualNetworkConnections@
        ]
        ids:[
          {
-           id: routeTable
+           id: routeTableId
          }
        ]
      }
