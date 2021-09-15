@@ -1,3 +1,5 @@
+targetScope = 'managementGroup'
+
 param roleId string
 param assignmentName string
 param principalId string

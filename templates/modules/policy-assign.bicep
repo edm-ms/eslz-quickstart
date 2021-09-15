@@ -11,6 +11,7 @@ param policyAssignmentName string
 param policyDescription string
 param policyParameters object = {}
 param exclusions array = []
+param nonComplianceMessage string = ''
 
 resource policyAssignment 'Microsoft.Authorization/policyAssignments@2020-09-01' = {
   name: policyAssignmentName
@@ -25,6 +26,11 @@ resource policyAssignment 'Microsoft.Authorization/policyAssignments@2020-09-01'
     enforcementMode: policyAssignmentEnforcementMode
     parameters: policyParameters
     notScopes: exclusions
+    nonComplianceMessages: [
+      {
+        message: nonComplianceMessage
+      }
+    ]
   }
 }
 
