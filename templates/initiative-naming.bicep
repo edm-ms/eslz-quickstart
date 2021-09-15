@@ -2,7 +2,8 @@ targetScope                          = 'managementGroup'
 param time string                    = utcNow()
 param initiativeDescription string   = 'Production naming convention for resources'
 param initiativeName string          = 'Prod-Naming'
-param managementGroupName string     = 'canary'
+param managementGroupName string     = 'prod'
+param nonComplianceMessage string    = 'Required Name Format: <shortName>-prod-'
 
 var policyDeployment                 = '${initiativeName}-${guid(time)}'
 var namingStandard                   =  json(loadTextContent('parameters/prod-naming.json'))
@@ -14,6 +15,7 @@ module namingPolicies 'modules/policy-naming.bicep' = [for i in range(0,length(n
     description: 'Naming format for ${namingStandard[i].resource}'
     nameMatch: namingStandard[i].nameFormat
     resourceType: namingStandard[i].resourceType
+    mode: namingStandard[i].policyMode
   }
 }]
 
@@ -55,5 +57,6 @@ module assignInitiative 'modules/policy-assign.bicep' = {
     policyAssignmentName: initiativeName
     policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${namingInitiative.id}'
     policyDescription: initiativeDescription
+    nonComplianceMessage: nonComplianceMessage
   }
 }
