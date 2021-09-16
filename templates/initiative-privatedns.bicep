@@ -1,13 +1,14 @@
 targetScope                           = 'managementGroup'
 
-param dnsResourceGroupName string     = '<>'
-param networkSubId string             = '<>'
+param dnsResourceGroupName string     = 'rg-prod-global-privatedns'
+param networkSubId string             = ''
 param managementGroupName string      = 'prod'
 param time string                     = utcNow()
 
 var dnsZoneParameters                 = json(loadTextContent('parameters/private-dns.json'))
 var privateDNSPolicy                  = json(loadTextContent('policy/policy-deny-privatelinkdns.json'))
 var location                          = deployment().location
+var nonComplianceMessage              = '''Private Link DNS Zones are already created: Choose "No" for "Integrate with Private DNS zone"'''
 
 module dnsResourceGroup 'modules/resource-group.bicep' = {
   scope: subscription(networkSubId)
@@ -44,6 +45,7 @@ module assignDenyDns 'modules/policy-assign.bicep' = {
     policyAssignmentName: privateDNSPolicy.Name
     policyDefinitionId: denyPrivateDns.outputs.policyId
     policyDescription: privateDNSPolicy.Description
+    nonComplianceMessage: nonComplianceMessage
     exclusions: [
       '/providers/Microsoft.Management/managementGroups/${managementGroupName}-connectivity'
     ]
@@ -64,7 +66,7 @@ module privateDnsZones 'modules/private-dns.bicep' = [for i in range(0, length(d
 module dnsPolicy 'modules/policy-privatelink-dns.bicep' = [for i in range(0, length(dnsZoneParameters)): {
   name: 'DNS-Policy-${dnsZoneParameters[i].resource}-${time}'
   params: {
-    name: dnsZoneParameters[i].resource
+    name: 'PrivateDNS-${dnsZoneParameters[i].resource}'
     groupId: dnsZoneParameters[i].groupId
     description: 'Create DNS record when ${dnsZoneParameters[i].resource} and private link are deployed'
   }
@@ -104,6 +106,7 @@ module assignInitiative 'modules/policy-assign.bicep' = {
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: 'Private-DNS-PaaS'
     policyDescription: 'Create DNS record for PaaS services'
+    nonComplianceMessage: nonComplianceMessage
     policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${customDnsInitiative.id}'
   }
 }
