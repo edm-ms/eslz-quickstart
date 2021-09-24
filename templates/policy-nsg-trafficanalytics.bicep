@@ -1,16 +1,19 @@
 targetScope = 'managementGroup'
 
-param definitionId string = '/providers/Microsoft.Authorization/policyDefinitions/5e1cd26a-5090-4fdb-9d6a-84a90335e22d'
-param location string = 'EastUS'
-param lawResourceId string = '<>'
-param lawGuid string = '<>'
+param nsgLocation string = 'WestUS'
 param storageId string = '<>'
-param networkWatcherRg string = 'NetworkWatcherRG'
 
-var noncompliance = '${description} - ${location}'
-var shortRegion = replace(replace(replace(replace(replace(location, 'east', 'e'), 'west', 'w'), 'north', 'n'), 'south', 's'), 'central', 'c')
-var assignmentName = '${shortRegion}-NSG-Flow'
-var description = 'Enable NSG FLow Logs - ${location}'
+var lawLocation = 'EastUS'
+var lawGuid = '<>'
+var lawResourceId = '<>'
+var definitionId = '/providers/Microsoft.Authorization/policyDefinitions/5e1cd26a-5090-4fdb-9d6a-84a90335e22d'
+var networkWatcherRg = 'NetworkWatcherRG'
+var noncompliance = '${description} - ${nsgLocation}'
+var nsgNameFix = toLower(replace(nsgLocation, ' ', ''))
+var shortRegion = replace(replace(replace(replace(replace(nsgNameFix, 'east', 'e'), 'west', 'w'), 'north', 'n'), 'south', 's'), 'central', 'c')
+var region = toUpper(shortRegion)
+var assignmentName = '${region}-NSG-Flow'
+var description = 'Enable NSG FLow Logs - ${nsgLocation}'
 
 module nsgpolicy 'modules/policy-assign.bicep' = {
   name: 'nsgflow'
@@ -20,19 +23,19 @@ module nsgpolicy 'modules/policy-assign.bicep' = {
     policyDefinitionId: definitionId
     policyDescription: description
     nonComplianceMessage: noncompliance
-    location: location
+    location: nsgLocation
     policyParameters: {
       timeInterval: {
         value: '10'
       }
       nsgRegion: {
-        value: location
+        value: nsgLocation
       }
       storageId: {
         value: storageId
       }
       workspaceRegion: {
-        value: location
+        value: lawLocation
       }
       workspaceId: {
         value: lawGuid
@@ -44,7 +47,7 @@ module nsgpolicy 'modules/policy-assign.bicep' = {
         value: networkWatcherRg
       }
       networkWatcherName: {
-        value: 'NetworkWatcher_${location}'
+        value: 'NetworkWatcher_${nsgLocation}'
       }
     }
   }
