@@ -1,8 +1,8 @@
 targetScope                           = 'managementGroup'
 
-param dnsResourceGroupName string     = 'rg-prod-global-privatedns'
+param dnsResourceGroupName string     = '<>'
 param networkSubId string             = ''
-param managementGroupName string      = 'prod'
+param managementGroupName string      = 'contoso'
 param time string                     = utcNow()
 
 var dnsZoneParameters                 = json(loadTextContent('parameters/private-dns.json'))
@@ -46,6 +46,7 @@ module assignDenyDns 'modules/policy-assign.bicep' = {
     policyDefinitionId: denyPrivateDns.outputs.policyId
     policyDescription: privateDNSPolicy.Description
     nonComplianceMessage: nonComplianceMessage
+    location: location
     exclusions: [
       '/providers/Microsoft.Management/managementGroups/${managementGroupName}-connectivity'
     ]
@@ -107,6 +108,7 @@ module assignInitiative 'modules/policy-assign.bicep' = {
     policyAssignmentName: 'Private-DNS-PaaS'
     policyDescription: 'Create DNS record for PaaS services'
     nonComplianceMessage: nonComplianceMessage
+    location: location
     policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${customDnsInitiative.id}'
   }
 }

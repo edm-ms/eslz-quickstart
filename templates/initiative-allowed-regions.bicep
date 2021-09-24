@@ -2,7 +2,8 @@ targetScope                   = 'managementGroup'
 param time string             = utcNow()
 param initiativeName string   = 'Allowed Regions'
 param assignmentName string   = 'Allowed-Regions'
-param mgtGrouupName string    = 'prod'
+param mgtGroupName string     = 'contoso'
+param location string         = 'eastus'
 
 var policyDeployment          = '${assignmentName}-${guid(time)}'
 var regions                   = json(loadTextContent('parameters/allowed-regions.json'))
@@ -16,7 +17,7 @@ module regionsInitiative 'modules/policy-initiative.bicep' = {
     initiativeName: initiativeName
     parameters: initiativeData.Properties.Parameters
     policyDefinitions: initiativeData.Properties.PolicyDefinitions
-    managementGroupName: mgtGrouupName
+    managementGroupName: mgtGroupName
   }
 }
 
@@ -27,6 +28,7 @@ module policy 'modules/policy-assign.bicep' = {
     policyAssignmentName: assignmentName
     policyDefinitionId: regionsInitiative.outputs.policyInitiativeId
     policyDescription: initiativeData.Properties.Description
+    location: location
     policyParameters: {
       regions: {
        value: regions

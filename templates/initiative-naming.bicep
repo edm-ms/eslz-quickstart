@@ -2,8 +2,9 @@ targetScope                          = 'managementGroup'
 param time string                    = utcNow()
 param initiativeDescription string   = 'Production naming convention for resources'
 param initiativeName string          = 'Prod-Naming'
-param managementGroupName string     = 'prod'
+param managementGroupName string     = 'contoso'
 param nonComplianceMessage string    = 'Required Name Format: <shortName>-prod-'
+param location string                =  'eastus'
 
 var policyDeployment                 = '${initiativeName}-${guid(time)}'
 var namingStandard                   =  json(loadTextContent('parameters/prod-naming.json'))
@@ -58,5 +59,6 @@ module assignInitiative 'modules/policy-assign.bicep' = {
     policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${namingInitiative.id}'
     policyDescription: initiativeDescription
     nonComplianceMessage: nonComplianceMessage
+    location: location
   }
 }

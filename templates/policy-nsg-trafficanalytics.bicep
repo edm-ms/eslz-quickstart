@@ -1,14 +1,16 @@
 targetScope = 'managementGroup'
 
-param assignmentName string = 'EUS-NSG-FlowLogs'
 param definitionId string = '/providers/Microsoft.Authorization/policyDefinitions/5e1cd26a-5090-4fdb-9d6a-84a90335e22d'
-param description string = 'Enable NSG Flow Logs in East US'
-param noncompliance string = 'Enable NSG FLow Logs'
-param location string = 'eastus'
+param location string = 'EastUS'
 param lawResourceId string = '<>'
 param lawGuid string = '<>'
 param storageId string = '<>'
 param networkWatcherRg string = 'NetworkWatcherRG'
+
+var noncompliance = '${description} - ${location}'
+var shortRegion = replace(replace(replace(replace(replace(location, 'east', 'e'), 'west', 'w'), 'north', 'n'), 'south', 's'), 'central', 'c')
+var assignmentName = '${shortRegion}-NSG-Flow'
+var description = 'Enable NSG FLow Logs - ${location}'
 
 module nsgpolicy 'modules/policy-assign.bicep' = {
   name: 'nsgflow'
