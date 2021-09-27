@@ -4,6 +4,7 @@ param initiativeName string   = 'Allowed Regions'
 param assignmentName string   = 'Allowed-Regions'
 param mgtGroupName string     = 'contoso'
 param location string         = 'eastus'
+param nonCompliance           = ''
 
 var policyDeployment          = '${assignmentName}-${guid(time)}'
 var regions                   = json(loadTextContent('parameters/allowed-regions.json'))
@@ -21,7 +22,7 @@ module regionsInitiative 'modules/policy-initiative.bicep' = {
   }
 }
 
-module policy 'modules/policy-assign.bicep' = {
+module policy 'modules/policy-assign-systemidentity.bicep' = {
   name: policyDeployment
   params: {
     policyAssignmentEnforcementMode: 'Default'
@@ -29,6 +30,7 @@ module policy 'modules/policy-assign.bicep' = {
     policyDefinitionId: regionsInitiative.outputs.policyInitiativeId
     policyDescription: initiativeData.Properties.Description
     location: location
+    nonComplianceMessage: nonCompliance
     policyParameters: {
       regions: {
        value: regions

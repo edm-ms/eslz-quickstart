@@ -11,13 +11,17 @@ param policyAssignmentName string
 param policyDescription string
 param policyParameters object = {}
 param exclusions array = []
-param nonComplianceMessage string = ''
+param nonComplianceMessage string 
+param identityResourceId string
 param location string
 
-resource policyAssignment 'Microsoft.Authorization/policyAssignments@2020-09-01' = {
+resource policyAssignment 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: policyAssignmentName
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${identityResourceId}': {}
+    }
   }
   location: location
   properties: {
@@ -34,5 +38,3 @@ resource policyAssignment 'Microsoft.Authorization/policyAssignments@2020-09-01'
     ]
   }
 }
-
-output policyIdentity string = policyAssignment.identity.principalId
