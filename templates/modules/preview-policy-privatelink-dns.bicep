@@ -34,6 +34,7 @@ resource privateLinkDnsPolicy 'Microsoft.Authorization/policyDefinitions@2021-06
         'effect': '[parameters(\'effect\')]'
         'details': {
           'type': 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups'
+          'evaluationDelay': 'AfterProvisioning'
           'roleDefinitionIds': [
             '/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7'
           ]
@@ -100,7 +101,6 @@ resource privateLinkDnsPolicy 'Microsoft.Authorization/policyDefinitions@2021-06
           'Disabled'
         ]
         defaultValue: 'DeployIfNotExists'
-        evaluationDelay: 'AfterProvisioning'
       }
      }
   }

@@ -81,7 +81,8 @@ module connectDns 'modules/dns-connection.bicep' = [for i in range(0, length(dns
     dnsZoneName: dnsZoneParameters[i].zoneName
   }
 }]
-module dnsPolicy 'modules/policy-privatelink-dns.bicep' = [for i in range(0, length(dnsZoneParameters)): {
+
+module dnsPolicy 'modules/preview-policy-privatelink-dns.bicep' = [for i in range(0, length(dnsZoneParameters)): {
   name: 'DNS-Policy-${dnsZoneParameters[i].resource}-${time}'
   params: {
     name: 'PrivateDNS-${dnsZoneParameters[i].resource}'

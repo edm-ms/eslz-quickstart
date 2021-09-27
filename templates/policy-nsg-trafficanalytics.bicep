@@ -1,13 +1,13 @@
-targetScope = 'managementGroup'
+targetScope                     = 'managementGroup'
 
-param nsgLocation string = 'WestUS'
-param storageId string = '<>'
+param nsgLocation string        = 'EastUS'
+param storageId string          = '<>'
+param lawLocation string        = 'EastUS'
+param lawGuid string            = '<>'
+param lawResourceId string      = '<>'
+param networkWatcherRg string   = 'NetworkWatcherRG'
 
-var lawLocation = 'EastUS'
-var lawGuid = '<>'
-var lawResourceId = '<>'
 var definitionId = '/providers/Microsoft.Authorization/policyDefinitions/5e1cd26a-5090-4fdb-9d6a-84a90335e22d'
-var networkWatcherRg = 'NetworkWatcherRG'
 var noncompliance = '${description} - ${nsgLocation}'
 var nsgNameFix = toLower(replace(nsgLocation, ' ', ''))
 var shortRegion = replace(replace(replace(replace(replace(nsgNameFix, 'east', 'e'), 'west', 'w'), 'north', 'n'), 'south', 's'), 'central', 'c')
