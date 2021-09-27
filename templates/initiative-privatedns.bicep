@@ -35,7 +35,7 @@ module denyPrivateDns 'modules/policy-definition.bicep' = {
 module delayForDnsPolicy 'modules/delay.bicep' = {
   name: 'delay-PrivateDNS'
 }
-module assignDenyDns 'modules/policy-assign.bicep' = {
+module assignDenyDns 'modules/policy-assign-systemidentity.bicep' = {
   name: 'assign-deny-PrivateDNS'
   dependsOn: [
     delayForDnsPolicy
@@ -98,7 +98,7 @@ module delayForInitiative 'modules/delay.bicep' = {
   ]
 }
 
-module assignInitiative 'modules/policy-assign.bicep' = {
+module assignInitiative 'modules/policy-assign-systemidentity.bicep' = {
   name: 'assign-initiative-DNS'
   dependsOn: [
     delayForInitiative

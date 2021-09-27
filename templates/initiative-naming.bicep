@@ -48,7 +48,7 @@ module assignDelay 'modules/delay.bicep' = {
   ]
 }
 
-module assignInitiative 'modules/policy-assign.bicep' = {
+module assignInitiative 'modules/policy-assign-systemidentity.bicep' = {
   name: policyDeployment
   dependsOn: [
     assignDelay
