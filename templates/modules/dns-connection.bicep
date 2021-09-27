@@ -1,4 +1,4 @@
-param dnsZone string
+param dnsZoneName string
 param connectionName string
 param vnetID string
 @allowed([
@@ -8,7 +8,7 @@ param vnetID string
 param autoReg bool = false
 
 resource privateDNS 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
- name: '${dnsZone}/${connectionName}'
+ name: '${dnsZoneName}/${connectionName}'
  location: 'global'
  properties:{
    virtualNetwork:{
