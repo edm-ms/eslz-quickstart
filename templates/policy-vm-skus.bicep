@@ -9,7 +9,7 @@ var policyDeployment          = '${assignmentName}-${guid(time)}'
 var assignmentName            = 'Allowed-VM-SKU'
 var skus                      = json(loadTextContent('parameters/allowed-vm-skus-prod.json'))
 
-module policy 'modules/policy-assign.bicep' = {
+module policy 'modules/policy-assign-systemidentity.bicep' = {
   name: policyDeployment
   params: {
     policyAssignmentEnforcementMode: 'Default'

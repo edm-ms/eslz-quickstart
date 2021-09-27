@@ -5,7 +5,7 @@ param name string
 param description string
 param mode string = 'Indexed'
 
-resource privateLinkDnsPolicy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
+resource privateLinkDnsPolicy 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
   name: name
   properties: {
     description: description
@@ -100,6 +100,7 @@ resource privateLinkDnsPolicy 'Microsoft.Authorization/policyDefinitions@2020-09
           'Disabled'
         ]
         defaultValue: 'DeployIfNotExists'
+        evaluationDelay: 'AfterProvisioning'
       }
      }
   }

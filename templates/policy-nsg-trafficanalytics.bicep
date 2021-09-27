@@ -15,7 +15,7 @@ var region = toUpper(shortRegion)
 var assignmentName = '${region}-NSG-Flow'
 var description = 'Enable NSG FLow Logs - ${nsgLocation}'
 
-module nsgpolicy 'modules/policy-assign.bicep' = {
+module nsgpolicy 'modules/policy-assign-systemidentity.bicep' = {
   name: 'nsgflow'
   params: {
     policyAssignmentEnforcementMode: 'Default'
