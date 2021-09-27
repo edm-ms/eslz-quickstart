@@ -100,6 +100,7 @@ resource privateLinkDnsPolicy 'Microsoft.Authorization/policyDefinitions@2020-09
           'Disabled'
         ]
         defaultValue: 'DeployIfNotExists'
+        evaluationDelay: 'AfterProvisioning'
       }
      }
   }
