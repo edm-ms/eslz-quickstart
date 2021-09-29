@@ -1,0 +1,8 @@
+[
+    {
+      "nameFormat": "vnet-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Virtual Networks",
+      "resourceType": "Microsoft.Network/virtualNetworks/"
+    }
+  ]
