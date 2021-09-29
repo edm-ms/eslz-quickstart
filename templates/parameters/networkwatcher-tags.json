@@ -1,0 +1,8 @@
+{
+    "Application": "Azure Platform Operations",
+    "Application Owner": "Azure Platform Team",
+    "Cost Center": "123456",
+    "Contact Email": "az-platformops@contoso.com",
+    "Data Classification": "Internal",
+    "Recovery Tier": "Tier 2"
+}
