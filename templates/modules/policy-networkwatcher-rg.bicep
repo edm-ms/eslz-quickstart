@@ -1,6 +1,6 @@
 targetScope = 'managementGroup'
 
-param mode string = 'Indexed'
+param mode string = 'All'
 param description string = 'Create Network Watcher resource group in all subscriptions with required tags'
 param policyName string = 'Create Network Watcher resource group'
 param tags object
