@@ -1,9 +1,10 @@
 targetScope = 'managementGroup'
 
 param mode string = 'Indexed'
-param description string
-param policyName string
+param description string = 'Create Network Watcher resource group in all subscriptions with required tags'
+param policyName string = 'Create Network Watcher resource group'
 param tags object
+param location string
 
 resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
   name: policyName
@@ -14,21 +15,28 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
     policyRule: {
       'if': {
         'field': 'type'
-        'equals': 'Microsoft.Network/virtualNetworks'
+        'equals': 'Microsoft.Resources/subscriptions'
       }
       'then': {
         'effect': 'DeployIfNotExists'
         'details': {
-          'type': 'Microsoft.Network/networkWatchers'
-          'resourceGroupName': 'networkWatcherRG'
+          'type': 'Microsoft.Resources/subscriptions/resourceGroups'
+          'name': 'NetworkWatcherRG'
+          'deploymentScope': 'subscription'
+          'existenceScope': 'subscription'
           'existenceCondition': {
-            'field': 'location'
-            'equals': '[field(\'location\')]'
+            'allOf': [
+              {
+                'field': 'name'
+                'equals': 'NetworkWatcherRG'
+              }
+            ]
           }
           'roleDefinitionIds': [
-            '/providers/microsoft.authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7'
+            '/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c'
           ]
           'deployment': {
+            'location': location
             'properties': {
               'mode': 'incremental'
               'template': {
@@ -40,18 +48,19 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                   }
                 }
                 'resources': [
-                  {
-                    'apiVersion': '2016-09-01'
-                    'type': 'Microsoft.Network/networkWatchers'
-                    'name': '[concat(\'networkWatcher_\' parameters(\'location\'))]'
-                    'location': '[parameters(\'location\')]'
-                    'tags': tags
+                    {
+                      'name': 'NetworkWatcherRG'
+                      'type': 'Microsoft.Resources/resourceGroups'
+                      'apiVersion': '2021-04-01'
+                      'location': '[parameters(\'location\')]'
+                      'dependsOn': []
+                      'tags': tags                           
                   }
                 ]
               }
               'parameters': {
                 'location': {
-                  'value': '[field(\'location\')]'
+                  'value': location
                 }
               }
             }
@@ -59,19 +68,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
         }
       }
     }
-    parameters: {
-      location:{
-        type: 'String'
-      }
-      effect: {
-        type: 'String'
-        allowedValues: [
-          'DeployIfNotExists'
-          'Disabled'
-        ]
-        defaultValue: 'DeployIfNotExists'
-      }
-    }
+    parameters: {}
   }
 }
 
