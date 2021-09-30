@@ -8,6 +8,7 @@ targetScope = 'managementGroup'
 param policyAssignmentEnforcementMode string
 param policyDefinitionId string
 param policyAssignmentName string
+param policyDisplayName string
 param policyDescription string
 param policyParameters object = {}
 param exclusions array = []
@@ -22,7 +23,7 @@ resource policyAssignment 'Microsoft.Authorization/policyAssignments@2020-09-01'
   location: location
   properties: {
     description: policyDescription
-    displayName: policyDescription
+    displayName: policyDisplayName
     policyDefinitionId: policyDefinitionId
     enforcementMode: policyAssignmentEnforcementMode
     parameters: policyParameters

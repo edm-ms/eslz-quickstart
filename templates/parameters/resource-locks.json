@@ -54,12 +54,6 @@
       "resourceType": "Microsoft.Network/networkSecurityGroups"
     },
     {
-      "nameFormat": "pl-prod-*",
-      "policyMode": "Indexed",
-      "resource": "Private Link",
-      "resourceType": "Microsoft.Network/privateEndpoints"
-    },
-    {
       "nameFormat": "pip-prod-*",
       "policyMode": "Indexed",
       "resource": "Public IP Addresses",

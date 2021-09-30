@@ -1,13 +1,13 @@
 targetScope = 'managementGroup'
 
-param description string = 'This initiative deploys resource locks for defined resources'
+param description string = 'This initiative deploys resource locks for defined resource types'
 param display string = 'Deploy resource locks for critical resources'
 param name string = 'Deploy resource locks for critical resources'
 param assignmentName string = 'Deploy-ResourceLocks'
-param managementGroupName string
+param managementGroupName string = 'contoso-platform'
 param location string = 'eastus'
 param roleIds array = [
-  '/providers/Microsoft.Authorization/roleDefinitions/f9e39ccf-c9a1-437b-90da-b7b5497b514a'
+  '/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
 ]
 
 var lockValues = json(loadTextContent('parameters/resource-locks.json'))
@@ -45,5 +45,16 @@ module assignInit 'modules/policy-assign-systemidentity.bicep' = {
     policyAssignmentName: assignmentName
     policyDefinitionId: createInitiative.outputs.policyInitiativeId
     policyDescription: description
+    policyDisplayName: display
+  }
+}
+
+module assignRole 'modules/role-assign-managementgroup.bicep' = {
+  name: 'assignRole'
+  params: {
+    assignmentName: assignmentName
+    principalId:  assignInit.outputs.policyIdentity
+    principalType: 'ServicePrincipal'
+    roleId: '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
   }
 }

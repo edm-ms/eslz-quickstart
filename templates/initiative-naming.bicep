@@ -59,6 +59,7 @@ module assignInitiative 'modules/policy-assign-systemidentity.bicep' = {
     policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${namingInitiative.id}'
     policyDescription: initiativeDescription
     nonComplianceMessage: nonComplianceMessage
+    policyDisplayName: initiativeDescription
     location: location
   }
 }
