@@ -13,7 +13,7 @@ param roleIds array = [
 var lockValues = json(loadTextContent('parameters/resource-locks.json'))
 
 module locks 'modules/policy-resourcelock.bicep' = [for i in range(0, length(lockValues)): {
-  name: 'lock-${lockValues[i].resource}'
+  name: 'lock-${i}'
   params: {
     resourceType: lockValues[i].resourceType
     resourceName: lockValues[i].resource

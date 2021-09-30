@@ -78,12 +78,6 @@
       "resourceType": "Microsoft.Network/routeTables"
     },
     {
-      "nameFormat": "syn-prod-*",
-      "policyMode": "Indexed",
-      "resource": "Synapse",
-      "resourceType": "Microsoft.Synapse/workspaces"
-    },
-    {
       "nameFormat": "uai-prod-*",
       "policyMode": "Indexed",
       "resource": "User Assigned Identity",

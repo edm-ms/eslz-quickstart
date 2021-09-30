@@ -9,8 +9,8 @@ param managementGroup string
 resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
   name: 'Deploy resource lock for ${resourceName}'
   properties: {
-    description: 'This policy deploys resource locks for ${resourceName}s'
-    displayName: 'Deploy resource lock for ${resourceName}s'
+    description: 'This policy deploys resource locks for ${resourceName}'
+    displayName: 'Deploy resource lock for ${resourceName}'
     mode: mode
     policyRule: {
       'if': {
