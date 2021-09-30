@@ -55,7 +55,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                   'resources': [
                       {
                         'type': 'Microsoft.Authorization/locks'
-                        'scope': '[concat(parameters(\'resourceType\'), parameters(\'resourceName\'))]'
+                        'scope': '[concat(parameters(\'resourceType\'), \'\\\', parameters(\'resourceName\'))]'
                         'name': 'setByPolicy'
                         'apiVersion': '2017-04-01'
                         'properties': {
