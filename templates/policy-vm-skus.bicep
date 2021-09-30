@@ -14,6 +14,7 @@ module policy 'modules/policy-assign-systemidentity.bicep' = {
   params: {
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: assignmentName
+    policyDisplayName: description
     policyDefinitionId: policyID
     policyDescription: description
     location: location

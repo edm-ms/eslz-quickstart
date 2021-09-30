@@ -1,0 +1,110 @@
+[
+    {
+      "nameFormat": "azb-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Azure Bastion",
+      "resourceType": "Microsoft.Network/bastionHosts"
+    },
+    {
+      "nameFormat": "azfw-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Azure Firewall",
+      "resourceType": "Microsoft.Network/azureFirewalls"
+    },
+    {
+      "nameFormat": "alb-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Azure Load Balancer",
+      "resourceType": "Microsoft.Network/loadBalancers"
+    },
+    {
+      "nameFormat": "erc-prod-*",
+      "policyMode": "Indexed",
+      "resource": "ExpressRoute Circuit",
+      "resourceType": "Microsoft.Network/expressRouteCircuits"
+    },
+    {
+      "nameFormat": "erg-prod-*",
+      "policyMode": "Indexed",
+      "resource": "ExpressRoute Gateway",
+      "resourceType": "Microsoft.Network/expressRouteGateways"
+    },
+    {
+      "nameFormat": "fwp-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Firewall Policy",
+      "resourceType": "Microsoft.Network/firewallPolicies"
+    },
+    {
+      "nameFormat": "kv-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Key Vaults",
+      "resourceType": "Microsoft.KeyVault/vaults"
+    },
+    {
+      "nameFormat": "law-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Log Analytics Workspace",
+      "resourceType": "Microsoft.OperationalInsights/workspaces"
+    },
+    {
+      "nameFormat": "nsg-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Network Security Groups",
+      "resourceType": "Microsoft.Network/networkSecurityGroups"
+    },
+    {
+      "nameFormat": "pip-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Public IP Addresses",
+      "resourceType": "Microsoft.Network/publicIPAddresses"
+    },
+    {
+      "nameFormat": "rsv-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Recovery Services Vault",
+      "resourceType": "Microsoft.RecoveryServices/vaults"
+    },
+    {
+      "nameFormat": "rt-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Route Tables",
+      "resourceType": "Microsoft.Network/routeTables"
+    },
+    {
+      "nameFormat": "uai-prod-*",
+      "policyMode": "Indexed",
+      "resource": "User Assigned Identity",
+      "resourceType": "Microsoft.ManagedIdentity/userAssignedIdentities"
+    },
+    {
+      "nameFormat": "vpng-prod-*",
+      "policyMode": "Indexed",
+      "resource": "VPN Gateway",
+      "resourceType": "Microsoft.Network/vpnGateways"
+    },
+    {
+      "nameFormat": "vng-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Virtual Network Gateway",
+      "resourceType": "Microsoft.Network/virtualNetworkGateways"
+    },
+    {
+      "nameFormat": "vnet-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Virtual Networks",
+      "resourceType": "Microsoft.Network/virtualNetworks"
+    },
+    {
+      "nameFormat": "vw-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Virtual WAN",
+      "resourceType": "Microsoft.Network/virtualWans"
+    },
+    {
+      "nameFormat": "vwh-prod-*",
+      "policyMode": "Indexed",
+      "resource": "Virtual WAN Hub",
+      "resourceType": "Microsoft.Network/virtualHubs"
+    }
+  ]

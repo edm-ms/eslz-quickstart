@@ -22,6 +22,7 @@ module nsgpolicy 'modules/policy-assign-systemidentity.bicep' = {
     policyAssignmentName: assignmentName
     policyDefinitionId: definitionId
     policyDescription: description
+    policyDisplayName: description
     nonComplianceMessage: noncompliance
     location: nsgLocation
     policyParameters: {

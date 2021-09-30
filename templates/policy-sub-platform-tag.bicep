@@ -17,6 +17,7 @@ module policyAssign 'modules/policy-assign-systemidentity.bicep' = {
     policyDefinitionId: policyId
     policyDescription: description
     nonComplianceMessage: nonCompliance
+    policyDisplayName: description
     policyParameters: {
       tagName: {
         value: tagName

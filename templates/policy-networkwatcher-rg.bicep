@@ -32,6 +32,7 @@ module assignPolicy 'modules/policy-assign-systemidentity.bicep' = {
     policyAssignmentName: assignmentName
     policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${networkWatcherRg.outputs.policyId}'
     policyDescription: description
+    policyDisplayName: displayName
   }
 }
 

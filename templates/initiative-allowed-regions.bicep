@@ -30,6 +30,7 @@ module policy 'modules/policy-assign-systemidentity.bicep' = {
     policyDefinitionId: regionsInitiative.outputs.policyInitiativeId
     policyDescription: initiativeData.Properties.Description
     location: location
+    policyDisplayName: initiativeData.Properties.DisplayName
     nonComplianceMessage: nonCompliance
     policyParameters: {
       regions: {
