@@ -4,6 +4,7 @@ param resourceType string
 param resourceName string
 param mode string = 'Indexed'
 param roleIds array
+param managementGroup string
 
 resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
   name: 'Deploy resource lock for ${resourceName}'
@@ -56,7 +57,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                         'type': 'Microsoft.Authorization/locks'
                         'scope': '[concat(parameters(\'resourceType\'), parameters(\'resourceName\'))]'
                         'name': 'setByPolicy'
-                        'apiVersion': '2020-05-01'
+                        'apiVersion': '2017-04-01'
                         'properties': {
                           'level': 'CanNotDelete'
                           'notes': 'Lock applied by Azure Policy'
@@ -73,3 +74,4 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
 }
 
 output policyId string = policy.id
+output policyIdFull string = '/providers/Microsoft.Management/managementGroups/${managementGroup}/providers/${policy.id}'
