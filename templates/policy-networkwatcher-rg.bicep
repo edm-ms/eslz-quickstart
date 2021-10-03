@@ -40,7 +40,7 @@ module assignRole 'modules/role-assign-managementgroup.bicep' = {
   name: 'assignRole'
   params: {
     assignmentName: assignmentName
-    principalId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${assignPolicy.outputs.policyIdentity}'
+    principalId: assignPolicy.outputs.policyIdentity
     principalType: 'ServicePrincipal'
     roleId: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
   }
