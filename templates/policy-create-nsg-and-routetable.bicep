@@ -4,7 +4,7 @@ var routes = json(loadTextContent('parameters/firewall-routes.json'))
 var nsgs   = json(loadTextContent('parameters/nsgs.json'))
 var tags   = json(loadTextContent('parameters/networkwatcher-tags.json'))
 
-module nsgAndRoute 'modules/policy-sub-basenetworking.bicep' = {
+module nsgAndRoute 'modules/policy-sub-basenetworkingv2.bicep' = {
   name: 'createPolicy'
   params: {
     description: 'Create transit route tables and default NSG' 

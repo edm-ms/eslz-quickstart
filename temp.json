@@ -1,0 +1,32 @@
+{
+    "eastus": {
+      "id": "/subscriptions/4ed88c54-e9e1-43e4-85b5-a38eb9074e4b/resourceGroups/rg-prod-global-transit/providers/Microsoft.Network/routeTables/rt-prod-eus-transit"
+    },
+    "westus": {
+      "id": "/subscriptions/4ed88c54-e9e1-43e4-85b5-a38eb9074e4b/resourceGroups/rg-prod-global-transit/providers/Microsoft.Network/routeTables/rt-prod-wus-transit"
+    },
+    "disabled": {
+      "id": ""
+    }
+}
+
+
+output
+
+[
+    "/subscriptions/ab0b3a8a-1388-486d-9f00-483365edf8c4/resourceGroups/rg-prod-eus-nsglogs/providers/Microsoft.Network/networkSecurityGroups/nsg-prod-eus-transit",
+    "/subscriptions/ab0b3a8a-1388-486d-9f00-483365edf8c4/resourceGroups/rg-prod-eus-nsglogs/providers/Microsoft.Network/networkSecurityGroups/nsg-prod-wus-transit"
+]
+
+
+{
+    "disabled":{
+        "id":""
+    },
+    "eastus": {
+        "id":"/subscriptions/ab0b3a8a-1388-486d-9f00-483365edf8c4/resourceGroups/rg-prod-eus-nsglogs/providers/Microsoft.Network/networkSecurityGroups/nsg-prod-eus-transit"
+    },
+    "westus":{
+        "id":"/subscriptions/ab0b3a8a-1388-486d-9f00-483365edf8c4/resourceGroups/rg-prod-eus-nsglogs/providers/Microsoft.Network/networkSecurityGroups/nsg-prod-wus-transit"
+        }
+}

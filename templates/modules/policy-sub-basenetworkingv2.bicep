@@ -125,12 +125,54 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                             'location': '[parameters(\'nsgList\')[copyIndex()].location]'
                           }                          
                         ]
+                        'outputs': {
+                          'policyParameter': {
+                            'type': 'object'
+                            'value': {
+                              '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\' parameters(\'nsgList\')[0].name) \'2021-02-01\' \'full\').location]': {
+                                'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\' parameters(\'nsgList\')[0].name)]'
+                              }
+                              '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\' parameters(\'nsgList\')[1].name) \'2021-02-01\' \'full\').location]': {
+                                'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\' parameters(\'nsgList\')[1].name)]'
+                              }
+                              'disabled': {
+                                'id': ''
+                              }
+                            }
+                          }
+                        }
                       }
                     }
                     'dependsOn': [
                       resourceGroupName
                     ]
                   }
+
+                  {
+                    'type': 'Microsoft.Authorization/policyAssignments'
+                    'apiVersion': '2020-09-01'
+                    'name': 'Attach-NSG-Test'
+                    'identity': {
+                      'type': 'SystemAssigned'
+                    }
+                    'location': 'eastus'
+                    'properties': {
+                      'description': 'Attach default NSG to subnet'
+                      'displayName': 'Attach default NSG to subnet'
+                      'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/ecorp/providers/Microsoft.Authorization/policyDefinitions/Attach-NSG'
+                      'enforcementMode': 'Default'
+                      'parameters': {
+                        'nsg': '[reference(resourceId(\'Microsoft.Resources/deployments\', \'routeTables\'), \'2019-10-01\').outputs.policyParameter.value]'
+                      }
+                      'notScopes': ''
+                      'nonComplianceMessages': [
+                        {
+                          'message': 'Attach default NSG to subnet'
+                        }
+                      ]
+                    }
+                  }
+
                 ]
               }
               'parameters': {
@@ -149,19 +191,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
         }
       }
     }
-    parameters: {
-      nsgIds:{
-        type: 'Object'
-        defaultValue: {
-          'eastus': {
-            'id': 'resourceId'
-          }
-          'disabled': {
-            'id': ''
-          }
-        }
-      }
-    }
+    parameters: {}
   }
 }
 
