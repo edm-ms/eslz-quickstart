@@ -129,11 +129,11 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                           'policyParameter': {
                             'type': 'object'
                             'value': {
-                              '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\' parameters(\'nsgList\')[0].name) \'2021-02-01\' \'full\').location]': {
-                                'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\' parameters(\'nsgList\')[0].name)]'
+                              '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\')[0].name), \'2021-02-01\', \'full\').location]': {
+                                'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\')[0].name)]'
                               }
-                              '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\' parameters(\'nsgList\')[1].name) \'2021-02-01\' \'full\').location]': {
-                                'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\' parameters(\'nsgList\')[1].name)]'
+                              '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\')[1].name), \'2021-02-01\', \'full\').location]': {
+                                'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\')[1].name)]'
                               }
                               'disabled': {
                                 'id': ''
@@ -147,10 +147,12 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                       resourceGroupName
                     ]
                   }
-
                   {
                     'type': 'Microsoft.Authorization/policyAssignments'
                     'apiVersion': '2020-09-01'
+                    'dependsOn': [
+                      '[resourceId(\'Microsoft.Resources/deployments\', \'routeTables\')]'
+                    ]
                     'name': 'Attach-NSG-Test'
                     'identity': {
                       'type': 'SystemAssigned'
