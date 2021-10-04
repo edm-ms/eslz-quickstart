@@ -1,0 +1,71 @@
+{
+    "mode": "All",
+    "Description": "This policy will attach an NSG to all subnets in a subscription",
+    "DisplayName": "Attach default NSG to subnets",
+    "Name": "Attach-NSG",
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Network/virtualNetworks"
+              },
+              {
+                "not": {
+                  "field": "Microsoft.Network/virtualNetworks/subnets[*].networkSecurityGroup.id",
+                  "equals": "[parameters('nsg')[field('location')].id]"
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Network/virtualNetworks/subnets"
+              },
+              {
+                "not": {
+                  "field": "Microsoft.Network/virtualNetworks/subnets/networkSecurityGroup.id",
+                  "equals": "[parameters('nsg')[field('location')].id]"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "append",
+        "details": [
+          {
+            "field": "Microsoft.Network/virtualNetworks/subnets[*].networkSecurityGroup",
+            "value": {
+              "id": "[parameters('nsg')[field('location')].id]"
+            }
+          }
+        ]
+      }
+    },
+    "parameters": {
+      "nsg": {
+        "type": "Object",
+        "metadata": {
+          "displayName": "NSG Id",
+          "description": "Resource Id of the NSG. example:/subscriptions/yourSubscription/resourceGroups/yourResourceGroup/providers/Microsoft.Network/networkSecurityGroup/aNSG"
+        },
+        "defaultValue": {
+            "eastus": {
+              "id": "nsgResourceId"
+            },
+            "westus": {
+              "id": "nsgResourceId"
+            },
+            "disabled": {
+              "id": ""
+            }
+        }
+      }
+    }
+  }

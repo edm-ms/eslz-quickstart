@@ -1,0 +1,10 @@
+[
+    {
+        "name": "nsg-prod-eus-transit",
+        "location": "eastus"
+    },
+    {
+        "name": "nsg-prod-wus-transit",
+        "location": "westus"
+    }
+]
