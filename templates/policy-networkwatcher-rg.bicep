@@ -4,7 +4,7 @@ param location string             = 'eastus'
 param description string          = 'Create Network Watcher resource group'
 param displayName string          = 'Create Network Watcher resource group'
 param assignmentName string       = 'Deploy-NetworkWatcherRG'
-param managementGroupName string  = 'ecorp'
+param managementGroupName string  = '<>'
 
 var tags                          = json(loadTextContent('parameters/networkwatcher-tags.json'))
 
