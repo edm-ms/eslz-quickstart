@@ -1,0 +1,59 @@
+{
+    "mode": "All",
+    "Description": "This policy will attach an NSG to all subnets in a subscription",
+    "DisplayName": "Append DNS settings to all VNets",
+    "Name": "Append-DNS",
+    "policyRule": {
+      "if": {
+        "anyOf": [
+          {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Network/virtualNetworks"
+              },
+              {
+                "not": {
+                  "field": "Microsoft.Network/virtualNetworks/dhcpOptions.dnsServers[*]",
+                  "in": "[parameters('dns')]"
+                }
+              }
+            ]
+          },
+          {
+            "allOf": [
+              {
+                "field": "type",
+                "equals": "Microsoft.Network/virtualNetworks/dhcpOptions"
+              },
+              {
+                "not": {
+                  "field": "Microsoft.Network/virtualNetworks/dhcpOptions.dnsServers",
+                  "in": "[parameters('dns')]"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "then": {
+        "effect": "append",
+        "details": [
+          {
+            "field": "Microsoft.Network/virtualNetworks/dhcpOptions.dnsServers[*]",
+            "value": {
+              "dnsServers": "[parameters('dns')]"
+            }
+          }
+        ]
+      }
+    },
+    "parameters": {
+      "dns": {
+        "type": "Array",
+        "defaultValue": [
+          "10.100.0.4"
+        ]
+      }
+    }
+  }

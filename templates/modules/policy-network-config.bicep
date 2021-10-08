@@ -164,8 +164,8 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                     }
                     'location': location
                     'properties': {
-                      'description': '$Attach default NSG to subnet - ${locationUpper}'
-                      'displayName': 'Attach default NSG to subnet - ${locationUpper}'
+                      'description': '${locationUpper} - Attach default NSG to subnet'
+                      'displayName': '${locationUpper} - Attach default NSG to subnet'
                       'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/ecorp/providers/Microsoft.Authorization/policyDefinitions/Attach-NSG'
                       'enforcementMode': 'Default'
                       'parameters': {
@@ -194,8 +194,8 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                     }
                     'location': location
                     'properties': {
-                      'description': 'Attach default route table to subnet - ${locationUpper}'
-                      'displayName': 'Attach default route table to subnet - ${locationUpper}'
+                      'description': '${locationUpper} - Attach default route table to subnet'
+                      'displayName': '${locationUpper} - Attach default route table to subnet'
                       'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/ecorp/providers/Microsoft.Authorization/policyDefinitions/Attach-RouteTable'
                       'enforcementMode': 'Default'
                       'parameters': {

@@ -2,7 +2,7 @@ targetScope                          = 'managementGroup'
 param time string                    = utcNow()
 param initiativeDescription string   = 'Production naming convention for resources'
 param initiativeName string          = 'Prod-Naming'
-param managementGroupName string     = 'ecorp-landingzones'
+param managementGroupName string     = '<>-landingzones'
 param nonComplianceMessage string    = 'Required Name Format: <shortName>-prod-'
 param location string                =  'eastus'
 
@@ -17,6 +17,7 @@ module namingPolicies 'modules/policy-naming.bicep' = [for i in range(0,length(n
     nameMatch: namingStandard[i].nameFormat
     resourceType: namingStandard[i].resourceType
     mode: namingStandard[i].policyMode
+
   }
 }]
 
@@ -61,8 +62,6 @@ module assignInitiative 'modules/policy-assign-systemidentity.bicep' = {
     nonComplianceMessage: nonComplianceMessage
     policyDisplayName: initiativeDescription
     location: location
-    exclusions: [
-      '/providers/Microsoft.Management/managementGroups/ecorp-landingzones-nonprod'
-    ]
+    exclusions: []
   }
 }
