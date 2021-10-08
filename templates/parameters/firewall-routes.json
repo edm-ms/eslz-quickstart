@@ -2,21 +2,30 @@
     {
         "name": "rt-prod-eus-transit",
         "location": "eastus",
-        "routename": "route-to-regional-firewall",
-        "properties": {
-            "nextHopType": "VirtualAppliance",
-            "addressPrefix": "0.0.0.0/0",
-            "nextHopIpAddress": "10.100.0.4"
-        }
-    },
-    {
-        "name": "rt-prod-wus-transit",
-        "location": "westus",
-        "routename": "route-to-regional-firewall",
-        "properties": {
-            "nextHopType": "VirtualAppliance",
-            "addressPrefix": "0.0.0.0/0",
-            "nextHopIpAddress": "10.200.0.4"
-        }
+        "routes": [
+            {
+                "name": "upper-route-to-firewall",
+                "properties": {
+                    "addressPrefix": "0.0.0.0/1",
+                    "nextHopIpAddress": "10.100.0.4",
+                    "nextHopType": "VirtualAppliance"
+                }
+            },
+            {
+                "name": "lower-route-to-firewall",
+                "properties": {
+                    "addressPrefix": "128.0.0.0/1",
+                    "nextHopIpAddress": "10.100.0.4",
+                    "nextHopType": "VirtualAppliance"
+                }
+            },
+            {
+                "name": "application-gateway-route",
+                "properties": {
+                    "addressPrefix": "GatewayManager.EastUS",
+                    "nextHopType": "Internet"
+                }
+            }                     
+        ]
     }
 ]

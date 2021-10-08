@@ -1,19 +1,15 @@
-param routeTables array
+param routeTableName string
+param location string = resourceGroup().location
+param routes array
 
-resource rt 'Microsoft.Network/routeTables@2021-02-01' = [for routeTable in routeTables: {
-  name: routeTable.name
-  location: routeTable.location
+resource rt 'Microsoft.Network/routeTables@2021-02-01' = {
+  name: routeTableName
+  location: location
   properties: {
     disableBgpRoutePropagation: true
-    routes: [
-      {
-        name: routeTable.routename
-        properties: {
-          addressPrefix: routeTable.properties.addressPrefix
-          nextHopIpAddress: routeTable.properties.nextHopIpAddress
-          nextHopType: routeTable.properties.nextHopType
-        }
-      }
-    ]
+    routes: routes
   }
-}]
+}
+
+output routeTableId string = rt.id
+output routeTableLocation string = rt.location

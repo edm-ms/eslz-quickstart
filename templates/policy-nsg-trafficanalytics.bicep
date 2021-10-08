@@ -13,7 +13,7 @@ var nsgNameFix = toLower(replace(nsgLocation, ' ', ''))
 var shortRegion = replace(replace(replace(replace(replace(nsgNameFix, 'east', 'e'), 'west', 'w'), 'north', 'n'), 'south', 's'), 'central', 'c')
 var region = toUpper(shortRegion)
 var assignmentName = '${region}-NSG-Flow'
-var description = 'Enable NSG FLow Logs - ${nsgLocation}'
+var description = '${toUpper(nsgLocation)} - Enable NSG FLow Logs'
 
 module nsgpolicy 'modules/policy-assign-systemidentity.bicep' = {
   name: 'nsgflow'

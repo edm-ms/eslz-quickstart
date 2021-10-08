@@ -7,6 +7,11 @@ param tags object
 param resourceGroupName string 
 param routeTables array
 param nsgList array
+param location string
+
+var locationUpper = toUpper(location)
+var locationShortName = replace(replace(replace(replace(replace(locationUpper, 'EAST', 'E'), 'WEST', 'W'), 'NORTH', 'N'), 'SOUTH', 'S'), 'CENTRAL', 'C')
+var deploymentName = 'NSG-and-Route-Policy-${locationUpper}'
 
 resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
   name: policyName
@@ -31,10 +36,10 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
           'resourceGroupName': resourceGroupName
           'type': 'Microsoft.Network/routeTables'
           'roleDefinitionIds': [
-            '/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c'
+            '/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
           ]
           'deployment': {
-            'location': 'eastus'
+            'location': location
             'properties': {
               'mode': 'incremental'
               'template': {
@@ -63,7 +68,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                   {
                     'type': 'Microsoft.Resources/deployments'
                     'apiVersion': '2019-10-01'
-                    'name': 'routeTables'
+                    'name': deploymentName
                     'resourceGroup': resourceGroupName
                     'properties': {
                       'expressionEvaluationOptions': {
@@ -102,16 +107,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                             'location': '[parameters(\'routeTables\')[copyIndex()].location]'
                             'properties': {
                               'disableBgpRoutePropagation': true
-                              'routes': [
-                                {
-                                  'name': '[parameters(\'routeTables\')[copyIndex()].routename]'
-                                  'properties': {
-                                    'addressPrefix': '[parameters(\'routeTables\')[copyIndex()].properties.addressPrefix]'
-                                    'nextHopIpAddress': '[parameters(\'routeTables\')[copyIndex()].properties.nextHopIpAddress]'
-                                    'nextHopType': '[parameters(\'routeTables\')[copyIndex()].properties.nextHopType]'
-                                  }
-                                }
-                              ]
+                              'routes': '[parameters(\'routeTables\')[copyIndex()].routes]'
                             }
                           }
                           {
@@ -126,14 +122,22 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                           }                          
                         ]
                         'outputs': {
-                          'policyParameter': {
+                          'nsgPolicyParam': {
                             'type': 'object'
                             'value': {
                               '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\')[0].name), \'2021-02-01\', \'full\').location]': {
                                 'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\')[0].name)]'
                               }
-                              '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\')[1].name), \'2021-02-01\', \'full\').location]': {
-                                'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\')[1].name)]'
+                              'disabled': {
+                                'id': ''
+                              }
+                            }
+                          }
+                          'routePolicyParam': {
+                            'type': 'object'
+                            'value': {
+                              '[reference(resourceId(\'Microsoft.Network/routeTables\', parameters(\'routeTables\')[0].name), \'2021-02-01\', \'full\').location]': {
+                                'id': '[resourceId(\'Microsoft.Network/routeTables\', parameters(\'routeTables\')[0].name)]'
                               }
                               'disabled': {
                                 'id': ''
@@ -151,20 +155,23 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                     'type': 'Microsoft.Authorization/policyAssignments'
                     'apiVersion': '2020-09-01'
                     'dependsOn': [
-                      '[resourceId(\'Microsoft.Resources/deployments\', \'routeTables\')]'
+                      deploymentName
+                      resourceGroupName
                     ]
-                    'name': 'Attach-NSG-Test'
+                    'name': '${locationShortName}-Default-NSG'
                     'identity': {
                       'type': 'SystemAssigned'
                     }
-                    'location': 'eastus'
+                    'location': location
                     'properties': {
-                      'description': 'Attach default NSG to subnet'
-                      'displayName': 'Attach default NSG to subnet'
+                      'description': '$Attach default NSG to subnet - ${locationUpper}'
+                      'displayName': 'Attach default NSG to subnet - ${locationUpper}'
                       'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/ecorp/providers/Microsoft.Authorization/policyDefinitions/Attach-NSG'
                       'enforcementMode': 'Default'
                       'parameters': {
-                        'nsg': '[reference(resourceId(\'Microsoft.Resources/deployments\', \'routeTables\'), \'2019-10-01\').outputs.policyParameter.value]'
+                        'nsg': {
+                          'value': '[reference(concat(subscription().id, \'/resourceGroups/\', \'${resourceGroupName}\', \'/providers/Microsoft.Resources/deployments/\', \'${deploymentName}\'), \'2019-10-01\').outputs.nsgPolicyParam.value]'
+                        }
                       }
                       'notScopes': ''
                       'nonComplianceMessages': [
@@ -174,7 +181,36 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                       ]
                     }
                   }
-
+                  {
+                    'type': 'Microsoft.Authorization/policyAssignments'
+                    'apiVersion': '2020-09-01'
+                    'dependsOn': [
+                      deploymentName
+                      resourceGroupName
+                    ]
+                    'name': '${locationShortName}-Default-Route'
+                    'identity': {
+                      'type': 'SystemAssigned'
+                    }
+                    'location': location
+                    'properties': {
+                      'description': 'Attach default route table to subnet - ${locationUpper}'
+                      'displayName': 'Attach default route table to subnet - ${locationUpper}'
+                      'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/ecorp/providers/Microsoft.Authorization/policyDefinitions/Attach-RouteTable'
+                      'enforcementMode': 'Default'
+                      'parameters': {
+                        'routeTable': {
+                          'value': '[reference(concat(subscription().id, \'/resourceGroups/\', \'${resourceGroupName}\', \'/providers/Microsoft.Resources/deployments/\', \'${deploymentName}\'), \'2019-10-01\').outputs.routePolicyParam.value]'
+                        }
+                      }
+                      'notScopes': ''
+                      'nonComplianceMessages': [
+                        {
+                          'message': 'Attach default route table to subnet'
+                        }
+                      ]
+                    }
+                  }
                 ]
               }
               'parameters': {
@@ -185,7 +221,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                   'value': nsgList
                 }
                 'location': {
-                  'value': 'eastus'
+                  'value': location
                 }
               }
             }

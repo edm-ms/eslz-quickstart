@@ -2,7 +2,7 @@ targetScope                          = 'managementGroup'
 param time string                    = utcNow()
 param initiativeDescription string   = 'Production naming convention for resources'
 param initiativeName string          = 'Prod-Naming'
-param managementGroupName string     = 'contoso'
+param managementGroupName string     = 'ecorp-landingzones'
 param nonComplianceMessage string    = 'Required Name Format: <shortName>-prod-'
 param location string                =  'eastus'
 
@@ -61,5 +61,8 @@ module assignInitiative 'modules/policy-assign-systemidentity.bicep' = {
     nonComplianceMessage: nonComplianceMessage
     policyDisplayName: initiativeDescription
     location: location
+    exclusions: [
+      '/providers/Microsoft.Management/managementGroups/ecorp-landingzones-nonprod'
+    ]
   }
 }
