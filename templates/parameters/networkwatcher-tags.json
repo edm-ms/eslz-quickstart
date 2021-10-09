@@ -2,7 +2,7 @@
     "Application": "Azure Platform Operations",
     "Application Owner": "Azure Platform Team",
     "Cost Center": "04152010",
-    "Contact Email": "az-platformops@erickmoore.com",
+    "Contact Email": "az-platformops@contoso.com",
     "Data Classification": "Internal",
-    "Recovery Tier": "Tier 2"
+    "Recovery Tier": "Tier 1"
 }

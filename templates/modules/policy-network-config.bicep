@@ -119,6 +119,9 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                             'apiVersion': '2021-02-01'
                             'name': '[parameters(\'nsgList\')[copyIndex()].name]'
                             'location': '[parameters(\'nsgList\')[copyIndex()].location]'
+                            'properties': {
+                              'securityRules': '[parameters(\'nsgList\')[copyIndex()].securityRules]'
+                            }
                           }                          
                         ]
                         'outputs': {
