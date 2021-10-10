@@ -1,0 +1,248 @@
+[
+  {
+    "nameFormat": "ase-dev-*",
+    "policyMode": "Indexed",
+    "resource": "App Service Environment",
+    "resourceType": "Microsoft.Web/hostingEnvironments"
+  },
+  {
+    "nameFormat": "asp-dev-*",
+    "policyMode": "Indexed",
+    "resource": "App Service Plan",
+    "resourceType": "Microsoft.Web/serverfarms"
+  },
+  {
+    "nameFormat": "agw-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Application Gateway",
+    "resourceType": "Microsoft.Network/applicationGateways"
+  },
+  {
+    "nameFormat": "asg-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Application Security Groups",
+    "resourceType": "Microsoft.Network/applicationSecurityGroups"
+  },
+  {
+    "nameFormat": "as-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Availability Sets",
+    "resourceType": "Microsoft.Compute/availabilitySets"
+  },
+  {
+    "nameFormat": "azb-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Azure Bastion",
+    "resourceType": "Microsoft.Network/bastionHosts"
+  },
+  {
+    "nameFormat": "acr-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Azure Container Registry",
+    "resourceType": "Microsoft.ContainerRegistry/registries"
+  },
+  {
+    "nameFormat": "adf-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Azure Data Factory",
+    "resourceType": "Microsoft.DataFactory/factories"
+  },
+  {
+    "nameFormat": "adb-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Azure Databricks",
+    "resourceType": "Microsoft.Databricks/workspaces"
+  },
+  {
+    "nameFormat": "azfw-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Azure Firewall",
+    "resourceType": "Microsoft.Network/azureFirewalls"
+  },
+  {
+    "nameFormat": "afd-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Azure Front Door",
+    "resourceType": "Microsoft.Network/frontDoors"
+  },
+  {
+    "nameFormat": "aks-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Azure Kubernetes Service",
+    "resourceType": "Microsoft.ContainerService/managedClusters"
+  },
+  {
+    "nameFormat": "alb-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Azure Load Balancer",
+    "resourceType": "Microsoft.Network/loadBalancers"
+  },
+  {
+    "nameFormat": "ehc-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Event Hub Cluster",
+    "resourceType": "Microsoft.EventHub/clusters"
+  },
+  {
+    "nameFormat": "ehn-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Event Hub Namespace",
+    "resourceType": "Microsoft.EventHub/namespaces"
+  },
+  {
+    "nameFormat": "erc-dev-*",
+    "policyMode": "Indexed",
+    "resource": "ExpressRoute Circuit",
+    "resourceType": "Microsoft.Network/expressRouteCircuits"
+  },
+  {
+    "nameFormat": "erg-dev-*",
+    "policyMode": "Indexed",
+    "resource": "ExpressRoute Gateway",
+    "resourceType": "Microsoft.Network/expressRouteGateways"
+  },
+  {
+    "nameFormat": "fwp-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Firewall Policy",
+    "resourceType": "Microsoft.Network/firewallPolicies"
+  },
+  {
+    "nameFormat": "iot-dev-*",
+    "policyMode": "Indexed",
+    "resource": "IoT Hub",
+    "resourceType": "Microsoft.Devices/IotHubs"
+  },
+  {
+    "nameFormat": "kv-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Key Vaults",
+    "resourceType": "Microsoft.KeyVault/vaults"
+  },
+  {
+    "nameFormat": "law-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Log Analytics Workspace",
+    "resourceType": "Microsoft.OperationalInsights/workspaces"
+  },
+  {
+    "nameFormat": "nsg-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Network Security Groups",
+    "resourceType": "Microsoft.Network/networkSecurityGroups"
+  },
+  {
+    "nameFormat": "pl-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Private Link",
+    "resourceType": "Microsoft.Network/privateEndpoints"
+  },
+  {
+    "nameFormat": "pip-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Public IP Addresses",
+    "resourceType": "Microsoft.Network/publicIPAddresses"
+  },
+  {
+    "nameFormat": "rsv-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Recovery Services Vault",
+    "resourceType": "Microsoft.RecoveryServices/vaults"
+  },
+  {
+    "nameFormat": "rg-dev-*",
+    "policyMode": "All",
+    "resource": "Resource Groups",
+    "resourceType": "Microsoft.Resources/subscriptions/resourcegroups"
+  },
+  {
+    "nameFormat": "rt-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Route Tables",
+    "resourceType": "Microsoft.Network/routeTables"
+  },
+  {
+    "nameFormat": "sqldb-dev-*",
+    "policyMode": "Indexed",
+    "resource": "SQL Databases",
+    "resourceType": "Microsoft.Sql/servers/databases"
+  },
+  {
+    "nameFormat": "sqlsrv-dev-*",
+    "policyMode": "Indexed",
+    "resource": "SQL Servers",
+    "resourceType": "Microsoft.Sql/servers"
+  },
+  {
+    "nameFormat": "sb-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Service Bus",
+    "resourceType": "Microsoft.ServiceBus/namespaces"
+  },
+  {
+    "nameFormat": "sig-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Shared Image Gallery",
+    "resourceType": "Microsoft.Compute/galleries"
+  },
+  {
+    "nameFormat": "syn-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Synapse",
+    "resourceType": "Microsoft.Synapse/workspaces"
+  },
+  {
+    "nameFormat": "tmp-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Traffic Manager Profile",
+    "resourceType": "Microsoft.Network/trafficmanagerprofiles"
+  },
+  {
+    "nameFormat": "uai-dev-*",
+    "policyMode": "Indexed",
+    "resource": "User Assigned Identity",
+    "resourceType": "Microsoft.ManagedIdentity/userAssignedIdentities"
+  },
+  {
+    "nameFormat": "vpng-dev-*",
+    "policyMode": "Indexed",
+    "resource": "VPN Gateway",
+    "resourceType": "Microsoft.Network/vpnGateways"
+  },
+  {
+    "nameFormat": "img-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Virtual Machine Images",
+    "resourceType": "Microsoft.Compute/images"
+  },
+  {
+    "nameFormat": "vmss-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Virtual Machine Scale Sets",
+    "resourceType": "Microsoft.Compute/virtualMachineScaleSets/virtualmachines"
+  },
+  {
+    "nameFormat": "vng-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Virtual Network Gateway",
+    "resourceType": "Microsoft.Network/virtualNetworkGateways"
+  },
+  {
+    "nameFormat": "vnet-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Virtual Networks",
+    "resourceType": "Microsoft.Network/virtualNetworks"
+  },
+  {
+    "nameFormat": "vw-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Virtual WAN",
+    "resourceType": "Microsoft.Network/virtualWans"
+  },
+  {
+    "nameFormat": "vwh-dev-*",
+    "policyMode": "Indexed",
+    "resource": "Virtual WAN Hub",
+    "resourceType": "Microsoft.Network/virtualHubs"
+  }
+]
