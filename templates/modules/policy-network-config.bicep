@@ -8,6 +8,8 @@ param resourceGroupName string
 param routeTables array
 param nsgList array
 param location string
+param managementGroup string
+param dnsServers array
 
 var locationUpper = toUpper(location)
 var locationShortName = replace(replace(replace(replace(replace(locationUpper, 'EAST', 'E'), 'WEST', 'W'), 'NORTH', 'N'), 'SOUTH', 'S'), 'CENTRAL', 'C')
@@ -169,7 +171,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                     'properties': {
                       'description': '${locationUpper} - Attach default NSG to subnet'
                       'displayName': '${locationUpper} - Attach default NSG to subnet'
-                      'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/ecorp/providers/Microsoft.Authorization/policyDefinitions/Attach-NSG'
+                      'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/${managementGroup}/providers/Microsoft.Authorization/policyDefinitions/Attach-NSG'
                       'enforcementMode': 'Default'
                       'parameters': {
                         'nsg': {
@@ -199,7 +201,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                     'properties': {
                       'description': '${locationUpper} - Attach default route table to subnet'
                       'displayName': '${locationUpper} - Attach default route table to subnet'
-                      'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/ecorp/providers/Microsoft.Authorization/policyDefinitions/Attach-RouteTable'
+                      'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/${managementGroup}/providers/Microsoft.Authorization/policyDefinitions/Attach-RouteTable'
                       'enforcementMode': 'Default'
                       'parameters': {
                         'routeTable': {
@@ -214,6 +216,33 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                       ]
                     }
                   }
+                  {
+                    'type': 'Microsoft.Authorization/policyAssignments'
+                    'apiVersion': '2020-09-01'
+                    'dependsOn': []
+                    'name': '${locationShortName}-Append-DNS'
+                    'identity': {
+                      'type': 'SystemAssigned'
+                    }
+                    'location': location
+                    'properties': {
+                      'description': '${locationUpper} - Append DNS settings to all VNets'
+                      'displayName': '${locationUpper} - Append DNS settings to all VNets'
+                      'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/${managementGroup}/providers/Microsoft.Authorization/policyDefinitions/Append-DNS'
+                      'enforcementMode': 'Default'
+                      'parameters': {
+                        'dns': {
+                          'value': dnsServers
+                        }
+                      }
+                      'notScopes': ''
+                      'nonComplianceMessages': [
+                        {
+                          'message': 'Append DNS settings to all VNets'
+                        }
+                      ]
+                    }
+                  }                  
                 ]
               }
               'parameters': {
