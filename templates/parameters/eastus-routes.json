@@ -1,0 +1,31 @@
+[
+    {
+        "name": "rt-prod-eus-transit",
+        "location": "eastus",
+        "routes": [
+            {
+                "name": "upper-route-to-firewall",
+                "properties": {
+                    "addressPrefix": "0.0.0.0/1",
+                    "nextHopIpAddress": "10.100.0.4",
+                    "nextHopType": "VirtualAppliance"
+                }
+            },
+            {
+                "name": "lower-route-to-firewall",
+                "properties": {
+                    "addressPrefix": "128.0.0.0/1",
+                    "nextHopIpAddress": "10.100.0.4",
+                    "nextHopType": "VirtualAppliance"
+                }
+            },
+            {
+                "name": "application-gateway-route",
+                "properties": {
+                    "addressPrefix": "GatewayManager.EastUS",
+                    "nextHopType": "Internet"
+                }
+            }                     
+        ]
+    }
+]

@@ -1,0 +1,62 @@
+[
+    {
+        "name": "nsg-prod-eus-transit",
+        "location": "eastus",
+        "securityRules": [
+            {
+                "name": "allow_AADDS_Inbound",
+                "properties": {
+                    "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 4093,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [ "10.100.2.4", "10.100.2.5" ],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "allow_AzureSQL_Inbound",
+                "properties": {
+                    "protocol": "TCP",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "",
+                    "sourceAddressPrefix": "SqlManagement",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 4094,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [
+                        9000, 9003, 1438, 1440, 1452
+                    ],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "allow_AzureLoadBalancer_Inbound",
+                "properties": {
+                    "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "AzureLoadBalancer",
+                    "destinationAddressPrefix": "*",
+                    "access": "Allow",
+                    "priority": 4095,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            }
+        ]
+    }
+]
+

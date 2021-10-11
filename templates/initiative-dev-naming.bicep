@@ -1,22 +1,23 @@
 targetScope                          = 'managementGroup'
 param time string                    = utcNow()
-param initiativeDescription string   = 'Production naming convention for resources'
-param initiativeName string          = 'Prod-Naming'
-param managementGroupName string     = 'contoso'
-param nonComplianceMessage string    = 'Required Name Format: <shortName>-prod-'
+param initiativeDescription string   = 'Non-Prod naming convention for resources'
+param initiativeName string          = 'Non-Prod-Naming'
+param managementGroupName string     = '<>'
+param nonComplianceMessage string    = 'Required Name Format: <shortName>-dev-'
 param location string                =  'eastus'
 
 var policyDeployment                 = '${initiativeName}-${guid(time)}'
-var namingStandard                   =  json(loadTextContent('parameters/prod-naming.json'))
+var namingStandard                   =  json(loadTextContent('parameters/dev-naming.json'))
 
 module namingPolicies 'modules/policy-naming.bicep' = [for i in range(0,length(namingStandard)): {
   name: replace(namingStandard[i].resource, ' ', '')
   params: {
-    policyName: 'Name-${replace(namingStandard[i].resource, ' ', '')}'
-    description: 'Naming format for ${namingStandard[i].resource}'
+    policyName: 'Non-Prod-Name-${replace(namingStandard[i].resource, ' ', '')}'
+    description: 'Non-Prod naming format for ${namingStandard[i].resource}'
     nameMatch: namingStandard[i].nameFormat
     resourceType: namingStandard[i].resourceType
     mode: namingStandard[i].policyMode
+
   }
 }]
 
@@ -61,5 +62,6 @@ module assignInitiative 'modules/policy-assign-systemidentity.bicep' = {
     nonComplianceMessage: nonComplianceMessage
     policyDisplayName: initiativeDescription
     location: location
+    exclusions: []
   }
 }

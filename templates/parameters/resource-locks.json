@@ -90,12 +90,6 @@
       "resourceType": "Microsoft.Network/virtualNetworkGateways"
     },
     {
-      "nameFormat": "vnet-prod-*",
-      "policyMode": "Indexed",
-      "resource": "Virtual Networks",
-      "resourceType": "Microsoft.Network/virtualNetworks"
-    },
-    {
       "nameFormat": "vw-prod-*",
       "policyMode": "Indexed",
       "resource": "Virtual WAN",
