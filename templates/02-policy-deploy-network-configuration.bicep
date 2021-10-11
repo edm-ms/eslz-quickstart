@@ -47,3 +47,23 @@ module assignPolicy 'modules/policy-assign-systemidentity.bicep' = {
     policyDisplayName: description
   }
 }
+
+module waitForAssignment 'modules/delay.bicep' = {
+  name: 'waitForAssignment'
+  dependsOn: [
+    assignPolicy
+  ]
+}
+
+module assignRole 'modules/role-assign-managementgroup.bicep' = {
+  name: 'assignRoleforPolicy'
+  dependsOn: [
+    waitForAssignment
+  ]
+  params: {
+    assignmentName: assignmentName
+    principalId: assignPolicy.outputs.policyIdentity
+    principalType: 'ServicePrincipal'
+    roleId: '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
+  }
+}
