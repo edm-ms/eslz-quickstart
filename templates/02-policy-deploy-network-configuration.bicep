@@ -1,16 +1,15 @@
 targetScope = 'managementGroup'
 
-param resourceGroupName string          = 'rg-prod-eus-corpnetwork'
-param managementGroupName string        = 'contoso-corp'
-param topManagementGroup string         = 'contoso'
-param assignmentName string             = 'EUS-Network-Config'
+param resourceGroupName string  = 'rg-prod-eus-corpnetwork'
+param assignmentName string     = 'EUS-Network-Config'
+param location string           = 'eastus'
 
-var routes        = json(loadTextContent('parameters/eastus-routes.json'))
-var nsgs          = json(loadTextContent('parameters/eastus-nsgs.json'))
-var tags          = json(loadTextContent('parameters/networkwatcher-tags.json'))
-var dnsServers    = json(loadTextContent('parameters/dns-servers.json'))
-var location      = 'eastus'
-var description   = '${toUpper(location)} - Deploy corporate network policies'
+var managementGroupName         = managementGroup().name
+var routes                      = json(loadTextContent('parameters/eastus-routes.json'))
+var nsgs                        = json(loadTextContent('parameters/eastus-nsgs.json'))
+var tags                        = json(loadTextContent('parameters/networkwatcher-tags.json'))
+var dnsServers                  = json(loadTextContent('parameters/dns-servers.json'))
+var description                 = '${toUpper(location)} - Deploy corporate network policies'
 
 module networkconfig 'modules/policy-network-config.bicep' = {
   name: 'create-NetworkAppend-policy'
@@ -23,7 +22,7 @@ module networkconfig 'modules/policy-network-config.bicep' = {
     dnsServers: dnsServers
     tags: tags
     location: location
-    managementGroup: topManagementGroup
+    managementGroup: managementGroupName
     
   }
 }
@@ -42,7 +41,7 @@ module assignPolicy 'modules/policy-assign-systemidentity.bicep' = {
     nonComplianceMessage: 'Deploy corporate NSG, route table, and DNS'
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: assignmentName
-    policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${networkconfig.outputs.policyId}' 
+    policyDefinitionId: networkconfig.outputs.policyId
     policyDescription: description
     policyDisplayName: description
   }

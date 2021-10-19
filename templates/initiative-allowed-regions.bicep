@@ -2,7 +2,6 @@ targetScope                   = 'managementGroup'
 param time string             = utcNow()
 param initiativeName string   = 'Allowed Regions'
 param assignmentName string   = 'Allowed-Regions'
-param mgtGroupName string     = 'contoso'
 param location string         = 'eastus'
 param nonCompliance string    = 'Allowed Regions: East US, East US 2, West US, West US 2, Central US'
 
@@ -18,7 +17,6 @@ module regionsInitiative 'modules/policy-initiative.bicep' = {
     initiativeName: initiativeName
     parameters: initiativeData.Properties.Parameters
     policyDefinitions: initiativeData.Properties.PolicyDefinitions
-    managementGroupName: mgtGroupName
   }
 }
 

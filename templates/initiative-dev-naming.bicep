@@ -2,7 +2,6 @@ targetScope                          = 'managementGroup'
 param time string                    = utcNow()
 param initiativeDescription string   = 'Non-Prod naming convention for resources'
 param initiativeName string          = 'Non-Prod-Naming'
-param managementGroupName string     = '<>'
 param nonComplianceMessage string    = 'Required Name Format: <shortName>-dev-'
 param location string                =  'eastus'
 
@@ -37,7 +36,7 @@ resource namingInitiative 'Microsoft.Authorization/policySetDefinitions@2020-09-
     description: initiativeDescription
     displayName: initiativeDescription
     policyDefinitions: [for i in range(0, length(namingStandard)): {
-      policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${namingPolicies[i].outputs.policyId}'
+      policyDefinitionId: namingPolicies[i].outputs.policyId
     }]
   }
 }
@@ -57,7 +56,7 @@ module assignInitiative 'modules/policy-assign-systemidentity.bicep' = {
   params: {
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: initiativeName
-    policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${namingInitiative.id}'
+    policyDefinitionId: namingInitiative.id
     policyDescription: initiativeDescription
     nonComplianceMessage: nonComplianceMessage
     policyDisplayName: initiativeDescription

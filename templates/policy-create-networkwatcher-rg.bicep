@@ -4,7 +4,6 @@ param location string             = 'eastus'
 param description string          = 'Create Network Watcher resource group'
 param displayName string          = 'Create Network Watcher resource group'
 param assignmentName string       = 'Deploy-NetworkWatcherRG'
-param managementGroupName string  = '<>'
 
 var tags                          = json(loadTextContent('parameters/networkwatcher-tags.json'))
 
@@ -30,7 +29,7 @@ module assignPolicy 'modules/policy-assign-systemidentity.bicep' = {
     nonComplianceMessage: displayName
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: assignmentName
-    policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${networkWatcherRg.outputs.policyId}'
+    policyDefinitionId: networkWatcherRg.outputs.policyId
     policyDescription: description
     policyDisplayName: displayName
   }

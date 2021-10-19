@@ -4,7 +4,6 @@ param description string = 'This initiative deploys resource locks for defined r
 param display string = 'Deploy resource locks for critical resources'
 param name string = 'Deploy resource locks for critical resources'
 param assignmentName string = 'Deploy-ResourceLocks'
-param managementGroupName string = 'contoso-platform'
 param location string = 'eastus'
 param roleIds array = [
   '/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
@@ -18,7 +17,6 @@ module locks 'modules/policy-resourcelock.bicep' = [for i in range(0, length(loc
     resourceType: lockValues[i].resourceType
     resourceName: lockValues[i].resource
     roleIds: roleIds
-    managementGroup: managementGroupName
   }
 }]
 
@@ -28,10 +26,9 @@ module createInitiative 'modules/policy-initiative.bicep' = {
     description: description
     displayName: display
     initiativeName: name
-    managementGroupName: managementGroupName
     parameters: {}
     policyDefinitions: [for i in range(0, length(lockValues)): {
-     policyDefinitionId: locks[i].outputs.policyIdFull
+     policyDefinitionId: locks[i].outputs.policyId
     }]
   }
 }

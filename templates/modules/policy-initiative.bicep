@@ -5,7 +5,6 @@ param description string
 param displayName string
 param parameters object
 param policyDefinitions array
-param managementGroupName string
 
 resource policyInitiative 'Microsoft.Authorization/policySetDefinitions@2020-09-01' = {
   name: initiativeName
@@ -18,4 +17,4 @@ resource policyInitiative 'Microsoft.Authorization/policySetDefinitions@2020-09-
   }
 }
 
-output policyInitiativeId string = '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${policyInitiative.id}'
+output policyInitiativeId string = policyInitiative.id

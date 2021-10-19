@@ -6,13 +6,13 @@ param networkSubId string             = '<>'
 param dnsSubId string                 = '<>'
 param dnsVnetName string              = '<>'
 param dnsVnetResourceGroupName string = '<>'
-param managementGroupName string      = 'contoso'
 param location string                 = 'eastus'
 param time string                     = utcNow()
 
 var dnsZoneParameters                 = json(loadTextContent('parameters/private-dns.json'))
 var privateDNSPolicy                  = json(loadTextContent('policy/policy-deny-privatelinkdns.json'))
 var nonComplianceMessage              = '''Private Link DNS Zones are already created: Choose "No" for "Integrate with Private DNS zone"'''
+var managementGroupName               = managementGroup().name
 
 module dnsResourceGroup 'modules/resource-group.bicep' = {
   scope: subscription(networkSubId)
@@ -30,7 +30,6 @@ resource dnsLinkedVnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing =
 module denyPrivateDns 'modules/policy-definition.bicep' = {
   name: 'create-denyPrivateDNS-policy'
   params: {
-    managementGroupName: managementGroupName
     policyDescription: privateDNSPolicy.Description
     policyDisplayName: privateDNSPolicy.DisplayName
     policyName: privateDNSPolicy.Name
@@ -99,7 +98,7 @@ resource customDnsInitiative 'Microsoft.Authorization/policySetDefinitions@2020-
     description: 'Create DNS record for PaaS services'
     parameters: {}
     policyDefinitions: [for i in range(0, length(dnsZoneParameters)): {
-      policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${dnsPolicy[i].outputs.policyId}' 
+      policyDefinitionId: dnsPolicy[i].outputs.policyId
       policyDefinitionReferenceId: '${dnsZoneParameters[i].resource}-Private-DNS'
       parameters: {
         privateDnsZoneId:{
@@ -128,7 +127,7 @@ module assignInitiative 'modules/policy-assign-systemidentity.bicep' = {
     policyDescription: 'Create DNS record for PaaS services'
     nonComplianceMessage: nonComplianceMessage
     policyDisplayName: 'Create DNS record for PaaS services'
-    policyDefinitionId: '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${customDnsInitiative.id}'
+    policyDefinitionId: customDnsInitiative.id
     location: location
   }
 }

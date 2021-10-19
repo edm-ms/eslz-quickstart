@@ -6,7 +6,6 @@ param policyDescription string
 param policyDisplayName string
 param mode string = 'indexed'
 param policyParameters object
-param managementGroupName string
 
 resource policyDef 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
   name: policyName
@@ -20,4 +19,4 @@ resource policyDef 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
   }
 }
 
-output policyId string = '/providers/Microsoft.Management/managementGroups/${managementGroupName}/providers/${policyDef.id}'
+output policyId string = policyDef.id

@@ -1,14 +1,12 @@
 targetScope = 'managementGroup'
-param managementGroupName string         = 'contoso'
 
-var dnsPolicy     = json(loadTextContent('policy/policy-append-dns.json'))
-var routePolicy   = json(loadTextContent('policy/policy-attach-routetable.json'))
-var nsgPolicy     = json(loadTextContent('policy/policy-attach-nsg.json'))
+var dnsPolicy           = json(loadTextContent('policy/policy-append-dns.json'))
+var routePolicy         = json(loadTextContent('policy/policy-attach-routetable.json'))
+var nsgPolicy           = json(loadTextContent('policy/policy-attach-nsg.json'))
 
 module dnsAppendPolicy 'modules/policy-definition.bicep' = {
   name: 'create-DNSAppend-Policy'
   params: {
-    managementGroupName: managementGroupName
     policyDescription: dnsPolicy.Description
     policyDisplayName: dnsPolicy.DisplayName
     policyName: dnsPolicy.Name
@@ -21,7 +19,6 @@ module dnsAppendPolicy 'modules/policy-definition.bicep' = {
 module routeTableAttach 'modules/policy-definition.bicep' = {
   name: 'create-RouteTableAttach-policy'
   params: {
-    managementGroupName: managementGroupName
     policyDescription: routePolicy.Description
     policyDisplayName: routePolicy.DisplayName
     policyName: routePolicy.Name
@@ -34,7 +31,6 @@ module routeTableAttach 'modules/policy-definition.bicep' = {
 module nsgAttach 'modules/policy-definition.bicep' = {
   name: 'create-NSGAttach-policy'
   params: {
-    managementGroupName: managementGroupName
     policyDescription: nsgPolicy.Description
     policyDisplayName: nsgPolicy.DisplayName
     policyName: nsgPolicy.Name

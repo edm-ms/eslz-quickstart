@@ -4,7 +4,6 @@ param resourceType string
 param resourceName string
 param mode string = 'Indexed'
 param roleIds array
-param managementGroup string
 
 resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
   name: 'Deploy resource lock for ${resourceName}'
@@ -74,4 +73,3 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
 }
 
 output policyId string = policy.id
-output policyIdFull string = '/providers/Microsoft.Management/managementGroups/${managementGroup}/providers/${policy.id}'
