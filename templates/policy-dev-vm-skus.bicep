@@ -4,10 +4,11 @@ param policyID string         = '/providers/Microsoft.Authorization/policyDefini
 param description string      = 'Allowed Non-Prod virtual machine SKUs'
 param location string         = 'eastus'
 param nonCompliance string    = 'Select a SKU from the following: Standard_Bms'
+param skus array              = json(loadTextContent('parameters/allowed-vm-skus-dev.json'))
 
 var policyDeployment          = '${assignmentName}-${guid(time)}'
 var assignmentName            = 'Allowed-VM-SKU'
-var skus                      = json(loadTextContent('parameters/allowed-vm-skus-dev.json'))
+
 
 module policy 'modules/policy-assign-systemidentity.bicep' = {
   name: policyDeployment
