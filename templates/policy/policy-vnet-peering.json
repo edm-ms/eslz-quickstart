@@ -10,22 +10,12 @@
               "equals": "Microsoft.Network/virtualNetworks"
             },
             {
-              "field": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings[*].remoteVirtualNetwork.id",
-              "exists": false
-            }
-          ]
-        },
-        {
-          "allOf": [
-            {
-              "field": "type",
-              "equals": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings"
+              "field": "location",
+              "equals": "[parameters('location')]"
             },
             {
-              "not": {
-                "field": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/remoteVirtualNetwork.id",
-                "contains": "[parameters('transitVnetId')]"
-              }
+              "field": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings[*].remoteVirtualNetwork.id",
+              "exists": false
             }
           ]
         }
@@ -229,6 +219,14 @@
       "type": "String",
       "metadata": {
         "displayName": "transitVnetId",
+        "description": null
+      }
+    },
+    "location": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Azure region",
+        "strongType": "location",
         "description": null
       }
     }
