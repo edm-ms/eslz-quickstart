@@ -5,7 +5,7 @@ param name string
 param description string
 param mode string = 'Indexed'
 
-resource privateLinkDnsPolicy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
+resource privateLinkDnsPolicy 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
   name: name
   properties: {
     description: description
@@ -34,6 +34,7 @@ resource privateLinkDnsPolicy 'Microsoft.Authorization/policyDefinitions@2020-09
         'effect': '[parameters(\'effect\')]'
         'details': {
           'type': 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups'
+          'evaluationDelay': 'AfterProvisioning'
           'roleDefinitionIds': [
             '/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7'
           ]
