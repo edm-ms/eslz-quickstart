@@ -7,17 +7,25 @@ param assignmentName string = 'Platform-Tag'
 param nonCompliance string = 'Subscription purpose should be defined'
 param tagName string = 'Subscription Type'
 param tagValue string = 'Platform'
+param uaiName string = '<>'
+param uaiRg string = '<>'
+param uaiSubId string = '<>'
 
-module policyAssign 'modules/policy-assign-systemidentity.bicep' = {
+resource uai 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' existing = {
+  name: uaiName
+  scope: resourceGroup(uaiSubId, uaiRg)
+}
+
+module policyAssign 'modules/policy-assign-managedidentity.bicep' = {
   name: assignmentName
   params: {
+    identityResourceId: uai.id
     location: location
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: assignmentName
     policyDefinitionId: policyId
     policyDescription: description
     nonComplianceMessage: nonCompliance
-    policyDisplayName: description
     policyParameters: {
       tagName: {
         value: tagName
