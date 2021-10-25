@@ -1,0 +1,258 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "anyOf": [
+        {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.Network/virtualNetworks"
+            },
+            {
+              "field": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings[*].remoteVirtualNetwork.id",
+              "exists": false
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings"
+            },
+            {
+              "not": {
+                "field": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/remoteVirtualNetwork.id",
+                "contains": "[parameters('transitVnetId')]"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+				"type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7"
+        ],
+				"deployment": {
+				"properties": {
+					"mode": "incremental",
+					"template": {
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "metadata": {
+              "_generator": {
+                "name": "bicep",
+                "version": "0.4.1008.15138",
+                "templateHash": "4278984204055529991"
+              }
+            },
+            "parameters": {
+              "landingZoneVnetName": {
+                "type": "string",
+                "defaultValue": "vnet-dev-eus-sandbox"
+              },
+              "landingZoneVnetId": {
+                "type": "string",
+                "defaultValue": "/subscriptions/dec16b07-d234-4710-9d31-478e909560fd/resourceGroups/rg-dev-eus-sandboxnetwork/providers/Microsoft.Network/virtualNetworks/vnet-dev-eus-sandbox"
+              },
+              "transitVnetName": {
+                "type": "string",
+                "defaultValue": "vnet-prod-eus-firewall"
+              },
+              "transitVnetId": {
+                "type": "string",
+                "defaultValue": "/subscriptions/ab0b3a8a-1388-486d-9f00-483365edf8c4/resourceGroups/rg-prod-eus-transitnetwork/providers/Microsoft.Network/virtualNetworks/vnet-prod-eus-firewall"
+              }
+            },
+            "functions": [],
+            "variables": {
+              "transitSubId": "[split(parameters('transitVnetId'), '/')[2]]",
+              "transitSubRg": "[split(parameters('transitVnetId'), '/')[4]]"
+            },
+            "resources": [
+              {
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2020-06-01",
+                "name": "peer-to-transit",
+                "properties": {
+                  "expressionEvaluationOptions": {
+                    "scope": "inner"
+                  },
+                  "mode": "Incremental",
+                  "parameters": {
+                    "allowGwTransit": {
+                      "value": false
+                    },
+                    "localVNetName": {
+                      "value": "[parameters('landingZoneVnetName')]"
+                    },
+                    "remoteVnetId": {
+                      "value": "[parameters('transitVnetId')]"
+                    },
+                    "remoteVNetName": {
+                      "value": "[parameters('transitVnetName')]"
+                    },
+                    "useRemoteGw": {
+                      "value": false
+                    }
+                  },
+                  "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "metadata": {
+                      "_generator": {
+                        "name": "bicep",
+                        "version": "0.4.1008.15138",
+                        "templateHash": "1708128285934005415"
+                      }
+                    },
+                    "parameters": {
+                      "localVNetName": {
+                        "type": "string"
+                      },
+                      "remoteVNetName": {
+                        "type": "string"
+                      },
+                      "remoteVnetId": {
+                        "type": "string"
+                      },
+                      "allowGwTransit": {
+                        "type": "bool",
+                        "allowedValues": [
+                          true,
+                          false
+                        ]
+                      },
+                      "useRemoteGw": {
+                        "type": "bool",
+                        "allowedValues": [
+                          true,
+                          false
+                        ]
+                      }
+                    },
+                    "functions": [],
+                    "resources": [
+                      {
+                        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                        "apiVersion": "2020-11-01",
+                        "name": "[format('{0}/peer-to-{1}', parameters('localVNetName'), parameters('remoteVNetName'))]",
+                        "properties": {
+                          "allowForwardedTraffic": true,
+                          "allowVirtualNetworkAccess": true,
+                          "allowGatewayTransit": "[parameters('allowGwTransit')]",
+                          "useRemoteGateways": "[parameters('useRemoteGw')]",
+                          "remoteVirtualNetwork": {
+                            "id": "[parameters('remoteVnetId')]"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "Microsoft.Resources/deployments",
+                "apiVersion": "2020-06-01",
+                "name": "peer-from-transit",
+                "subscriptionId": "[variables('transitSubId')]",
+                "resourceGroup": "[variables('transitSubRg')]",
+                "properties": {
+                  "expressionEvaluationOptions": {
+                    "scope": "inner"
+                  },
+                  "mode": "Incremental",
+                  "parameters": {
+                    "allowGwTransit": {
+                      "value": false
+                    },
+                    "localVNetName": {
+                      "value": "[parameters('transitVnetName')]"
+                    },
+                    "remoteVnetId": {
+                      "value": "[parameters('landingZoneVnetId')]"
+                    },
+                    "remoteVNetName": {
+                      "value": "[parameters('landingZoneVnetName')]"
+                    },
+                    "useRemoteGw": {
+                      "value": false
+                    }
+                  },
+                  "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "metadata": {
+                      "_generator": {
+                        "name": "bicep",
+                        "version": "0.4.1008.15138",
+                        "templateHash": "1708128285934005415"
+                      }
+                    },
+                    "parameters": {
+                      "localVNetName": {
+                        "type": "string"
+                      },
+                      "remoteVNetName": {
+                        "type": "string"
+                      },
+                      "remoteVnetId": {
+                        "type": "string"
+                      },
+                      "allowGwTransit": {
+                        "type": "bool",
+                        "allowedValues": [
+                          true,
+                          false
+                        ]
+                      },
+                      "useRemoteGw": {
+                        "type": "bool",
+                        "allowedValues": [
+                          true,
+                          false
+                        ]
+                      }
+                    },
+                    "functions": [],
+                    "resources": [
+                      {
+                        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                        "apiVersion": "2020-11-01",
+                        "name": "[format('{0}/peer-to-{1}', parameters('localVNetName'), parameters('remoteVNetName'))]",
+                        "properties": {
+                          "allowForwardedTraffic": true,
+                          "allowVirtualNetworkAccess": true,
+                          "allowGatewayTransit": "[parameters('allowGwTransit')]",
+                          "useRemoteGateways": "[parameters('useRemoteGw')]",
+                          "remoteVirtualNetwork": {
+                            "id": "[parameters('remoteVnetId')]"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+				}
+			}
+      }
+    }
+  },
+  "parameters": {
+    "transitVnetId": {
+      "type": "String",
+      "metadata": {
+        "displayName": "transitVnetId",
+        "description": null
+      }
+    }
+  }
+}

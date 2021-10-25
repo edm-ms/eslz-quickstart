@@ -53,7 +53,7 @@ module assignDenyDns 'modules/policy-assign-systemidentity.bicep' = {
     policyDefinitionId: denyPrivateDns.outputs.policyId
     policyDescription: privateDNSPolicy.Description
     nonComplianceMessage: nonComplianceMessage
-    policyDisplayName: 'Create DNS record for PaaS services'
+    policyDisplayName: privateDNSPolicy.DisplayName
     location: location
     exclusions: [
       '/providers/Microsoft.Management/managementGroups/${managementGroupName}-connectivity'
@@ -81,6 +81,7 @@ module connectDns 'modules/dns-connection.bicep' = [for i in range(0, length(dns
     dnsZoneName: dnsZoneParameters[i].zoneName
   }
 }]
+
 module dnsPolicy 'modules/policy-privatelink-dns.bicep' = [for i in range(0, length(dnsZoneParameters)): {
   name: 'DNS-Policy-${dnsZoneParameters[i].resource}-${time}'
   params: {
@@ -124,8 +125,8 @@ module assignInitiative 'modules/policy-assign-systemidentity.bicep' = {
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: 'Private-DNS-PaaS'
     policyDescription: 'Create DNS record for PaaS services'
-    policyDisplayName: 'Create DNS record for PaaS services'
     nonComplianceMessage: nonComplianceMessage
+    policyDisplayName: 'Create DNS record for PaaS services'
     policyDefinitionId: customDnsInitiative.id
     location: location
   }
