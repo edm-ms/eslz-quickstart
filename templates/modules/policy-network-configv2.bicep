@@ -169,7 +169,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                     'properties': {
                       'description': '${locationUpper} - Subscription network configuration'
                       'displayName': '${locationUpper} - Subscription network configuration'
-                      'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/${managementGroup}/providers/Microsoft.Authorization/policyDefinitions/Network-Configuration'
+                      'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/${managementGroup}/providers/Microsoft.Authorization/policySetDefinitions/Network-Configuration'
                       'enforcementMode': 'Default'
                       'parameters': {
                         'dns': {
