@@ -37,18 +37,38 @@ module waitForPolicy 'modules/delay.bicep' = {
     networkconfig
   ]
 }
-module assignPolicy 'modules/policy-assign-managedidentity.bicep' = {
-  name: 'assignPolicy'
+module assignPolicy 'modules/policy-assign-systemidentity.bicep' = {
+  name: 'assign-NetworkAppend-policy'
   dependsOn: [
     waitForPolicy
   ]
   params: {
-    identityResourceId: managedIdentityId
     location: location
     nonComplianceMessage: nonCompliance
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: assignmentName
     policyDefinitionId: networkconfig.outputs.policyId
     policyDescription: description
+    policyDisplayName: description
+  }
+}
+
+module waitForAssignment 'modules/delay.bicep' = {
+  name: 'waitForAssignment'
+  dependsOn: [
+    assignPolicy
+  ]
+}
+
+module assignRole 'modules/role-assign-managementgroup.bicep' = {
+  name: 'assignRoleforPolicy'
+  dependsOn: [
+    waitForAssignment
+  ]
+  params: {
+    assignmentName: assignmentName
+    principalId: assignPolicy.outputs.policyIdentity
+    principalType: 'ServicePrincipal'
+    roleId: '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
   }
 }
