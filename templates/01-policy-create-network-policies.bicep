@@ -77,10 +77,41 @@ module networkInitiative 'modules/policy-initiative.bicep' = {
       }
     }
     policyDefinitions: [
-      dnsAppendPolicy.outputs.policyId
-      routeTableAttach.outputs.policyId
-      nsgAttach.outputs.policyId
-      vnetPeering.outputs.policyId
+      {
+        policyDefinitionId: dnsAppendPolicy.outputs.policyId
+        parameters: {
+          dns: {
+            value: '[parameters(\'dns\')]'
+          }
+        }
+      }
+      {
+        policyDefinitionId: routeTableAttach.outputs.policyId
+        parameters: {
+          routeTable: {
+            value: '[parameters(\'routeTable\')]'
+          }
+        }
+      }
+      {
+        policyDefinitionId: nsgAttach.outputs.policyId
+        parameters: {
+          nsg: {
+            value: '[parameters(\'nsg\')]'
+          }
+        }
+      }
+      {
+        policyDefinitionId: vnetPeering.outputs.policyId
+        parameters: {
+          location: {
+            value: '[parameters(\'location\')]'
+          }
+          transitVnetId: {
+            value: '[parameters(\'transitVnetId\')]'
+          }
+        }
+      }      
     ]
   }
 }
