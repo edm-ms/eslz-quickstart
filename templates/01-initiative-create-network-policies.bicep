@@ -56,9 +56,9 @@ module vnetPeering 'modules/policy-definition.bicep' = {
 module networkInitiative 'modules/policy-initiative.bicep' = {
   name: 'create-network-initiative'
   params: {
-    description: 'Subscription network configuration'
+    description: 'This set of policy deploys a defined network configuration to all virtual networks in a subscription.'
     displayName: 'Subscription network configuration'
-    initiativeName: 'Subscription network configuration'
+    initiativeName: 'Network-Configuration'
     parameters: {
       dns: {
         type: 'array'

@@ -3,6 +3,7 @@ targetScope = 'managementGroup'
 param resourceGroupName string  = 'rg-prod-eus-corpnetwork'
 param assignmentName string     = 'EUS-Network-Config'
 param location string           = 'eastus'
+param transitVnetId string      = ''
 
 var managementGroupName         = managementGroup().name
 var routes                      = json(loadTextContent('parameters/eastus-routes.json'))
@@ -11,7 +12,7 @@ var tags                        = json(loadTextContent('parameters/networkwatche
 var dnsServers                  = json(loadTextContent('parameters/dns-servers.json'))
 var description                 = '${toUpper(location)} - Deploy corporate network policies'
 
-module networkconfig 'modules/policy-network-config.bicep' = {
+module networkconfig 'modules/policy-network-configv2.bicep' = {
   name: 'create-NetworkAppend-policy'
   params: {
     description: description
@@ -23,12 +24,15 @@ module networkconfig 'modules/policy-network-config.bicep' = {
     tags: tags
     location: location
     managementGroup: managementGroupName
-    
+    transitVnetId: transitVnetId
   }
 }
 
 module waitForPolicy 'modules/delay.bicep' = {
   name: 'waitForPolicy'
+  dependsOn: [
+    networkconfig
+  ]
 }
 
 module assignPolicy 'modules/policy-assign-systemidentity.bicep' = {
@@ -38,7 +42,7 @@ module assignPolicy 'modules/policy-assign-systemidentity.bicep' = {
   ]
   params: {
     location: location
-    nonComplianceMessage: 'Deploy corporate NSG, route table, and DNS'
+    nonComplianceMessage: 'Deploy corporate NSG, route table, DNS, and VNet peering.'
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: assignmentName
     policyDefinitionId: networkconfig.outputs.policyId
