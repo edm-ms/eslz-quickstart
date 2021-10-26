@@ -191,7 +191,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                       'notScopes': ''
                       'nonComplianceMessages': [
                         {
-                          'message': 'Append DNS settings to all VNets'
+                          'message': 'Corporate network configuration'
                         }
                       ]
                     }
