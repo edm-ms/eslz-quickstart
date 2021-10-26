@@ -1,0 +1,500 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.1008.15138",
+      "templateHash": "10511334430097238542"
+    }
+  },
+  "functions": [],
+  "variables": {
+    "dnsPolicy": "[json('{\r\n    \"mode\": \"All\",\r\n    \"Description\": \"This policy will append DNS servers to all VNets in a subscription\",\r\n    \"DisplayName\": \"Append DNS settings to all VNets\",\r\n    \"Name\": \"Append-DNS\",\r\n    \"policyRule\": {\r\n      \"if\": {\r\n        \"anyOf\": [\r\n          {\r\n            \"allOf\": [\r\n              {\r\n                \"field\": \"type\",\r\n                \"equals\": \"Microsoft.Network/virtualNetworks\"\r\n              },\r\n              {\r\n                \"not\": {\r\n                  \"field\": \"Microsoft.Network/virtualNetworks/dhcpOptions.dnsServers[*]\",\r\n                  \"in\": \"[parameters(''dns'')]\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"allOf\": [\r\n              {\r\n                \"field\": \"type\",\r\n                \"equals\": \"Microsoft.Network/virtualNetworks/dhcpOptions\"\r\n              },\r\n              {\r\n                \"not\": {\r\n                  \"field\": \"Microsoft.Network/virtualNetworks/dhcpOptions.dnsServers\",\r\n                  \"in\": \"[parameters(''dns'')]\"\r\n                }\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      },\r\n      \"then\": {\r\n        \"effect\": \"append\",\r\n        \"details\": [\r\n          {\r\n            \"field\": \"Microsoft.Network/virtualNetworks/dhcpOptions.dnsServers\",\r\n            \"value\": \"[parameters(''dns'')]\"\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"parameters\": {\r\n      \"dns\": {\r\n        \"type\": \"Array\",\r\n        \"defaultValue\": [\r\n          \"10.100.0.4\"\r\n        ]\r\n      }\r\n    }\r\n  }')]",
+    "routePolicy": "[json('{\r\n    \"mode\": \"All\",\r\n    \"Description\": \"This policy will attach a route table to all subnets in a subscription\",\r\n    \"DisplayName\": \"Attach default route table to subnets\",\r\n    \"Name\": \"Attach-RouteTable\",\r\n    \"policyRule\": {\r\n      \"if\": {\r\n        \"anyOf\": [\r\n          {\r\n            \"allOf\": [\r\n              {\r\n                \"field\": \"type\",\r\n                \"equals\": \"Microsoft.Network/virtualNetworks\"\r\n              },\r\n              {\r\n                \"not\": {\r\n                  \"field\": \"Microsoft.Network/virtualNetworks/subnets[*].routeTable.id\",\r\n                  \"equals\": \"[parameters(''routeTable'')[field(''location'')].id]\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"allOf\": [\r\n              {\r\n                \"field\": \"type\",\r\n                \"equals\": \"Microsoft.Network/virtualNetworks/subnets\"\r\n              },\r\n              {\r\n                \"not\": {\r\n                  \"field\": \"Microsoft.Network/virtualNetworks/subnets/routeTable.id\",\r\n                  \"equals\": \"[parameters(''routeTable'')[field(''location'')].id]\"\r\n                }\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      },\r\n      \"then\": {\r\n        \"effect\": \"append\",\r\n        \"details\": [\r\n          {\r\n            \"field\": \"Microsoft.Network/virtualNetworks/subnets[*].routeTable\",\r\n            \"value\": {\r\n              \"id\": \"[parameters(''routeTable'')[field(''location'')].id]\"\r\n            }\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"parameters\": {\r\n      \"routeTable\": {\r\n        \"type\": \"Object\",\r\n        \"metadata\": {\r\n          \"displayName\": \"Route table Id\",\r\n          \"description\": \"Resource Id of the route table. example:/subscriptions/yourSubscription/resourceGroups/yourResourceGroup/providers/Microsoft.Network/routeTables/aTable\"\r\n        },\r\n        \"defaultValue\": {\r\n            \"eastus\": {\r\n              \"id\": \"rtResourceId\"\r\n            },\r\n            \"westus\": {\r\n              \"id\": \"rtResourceId\"\r\n            },\r\n            \"disabled\": {\r\n              \"id\": \"\"\r\n            }\r\n        }\r\n      }\r\n    }\r\n  }')]",
+    "nsgPolicy": "[json('{\r\n    \"mode\": \"All\",\r\n    \"Description\": \"This policy will attach an NSG to all subnets in a subscription\",\r\n    \"DisplayName\": \"Attach default NSG to subnets\",\r\n    \"Name\": \"Attach-NSG\",\r\n    \"policyRule\": {\r\n      \"if\": {\r\n        \"anyOf\": [\r\n          {\r\n            \"allOf\": [\r\n              {\r\n                \"field\": \"type\",\r\n                \"equals\": \"Microsoft.Network/virtualNetworks\"\r\n              },\r\n              {\r\n                \"not\": {\r\n                  \"field\": \"Microsoft.Network/virtualNetworks/subnets[*].networkSecurityGroup.id\",\r\n                  \"equals\": \"[parameters(''nsg'')[field(''location'')].id]\"\r\n                }\r\n              }\r\n            ]\r\n          },\r\n          {\r\n            \"allOf\": [\r\n              {\r\n                \"field\": \"type\",\r\n                \"equals\": \"Microsoft.Network/virtualNetworks/subnets\"\r\n              },\r\n              {\r\n                \"not\": {\r\n                  \"field\": \"Microsoft.Network/virtualNetworks/subnets/networkSecurityGroup.id\",\r\n                  \"equals\": \"[parameters(''nsg'')[field(''location'')].id]\"\r\n                }\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      },\r\n      \"then\": {\r\n        \"effect\": \"append\",\r\n        \"details\": [\r\n          {\r\n            \"field\": \"Microsoft.Network/virtualNetworks/subnets[*].networkSecurityGroup\",\r\n            \"value\": {\r\n              \"id\": \"[parameters(''nsg'')[field(''location'')].id]\"\r\n            }\r\n          }\r\n        ]\r\n      }\r\n    },\r\n    \"parameters\": {\r\n      \"nsg\": {\r\n        \"type\": \"Object\",\r\n        \"metadata\": {\r\n          \"displayName\": \"NSG Id\",\r\n          \"description\": \"Resource Id of the NSG. example:/subscriptions/yourSubscription/resourceGroups/yourResourceGroup/providers/Microsoft.Network/networkSecurityGroup/aNSG\"\r\n        },\r\n        \"defaultValue\": {\r\n            \"eastus\": {\r\n              \"id\": \"nsgResourceId\"\r\n            },\r\n            \"westus\": {\r\n              \"id\": \"nsgResourceId\"\r\n            },\r\n            \"disabled\": {\r\n              \"id\": \"\"\r\n            }\r\n        }\r\n      }\r\n    }\r\n  }')]",
+    "peerPolicy": "[json('{\r\n  \"mode\": \"All\",\r\n  \"Description\": \"This policy will create VNet peering between any deployed VNet and a specified VNet\",\r\n  \"DisplayName\": \"Create VNet peering with transit VNet\",\r\n  \"Name\": \"Create-VNetPeer\",\r\n  \"policyRule\": {\r\n    \"if\": {\r\n      \"anyOf\": [\r\n        {\r\n          \"allOf\": [\r\n            {\r\n              \"field\": \"type\",\r\n              \"equals\": \"Microsoft.Network/virtualNetworks\"\r\n            },\r\n            {\r\n              \"field\": \"location\",\r\n              \"matchInsensitively\": \"[parameters(''location'')]\"\r\n            },\r\n            {\r\n              \"field\": \"Microsoft.Network/virtualNetworks/virtualNetworkPeerings[*].remoteVirtualNetwork.id\",\r\n              \"exists\": false\r\n            }\r\n          ]\r\n        }\r\n      ]\r\n    },\r\n    \"then\": {\r\n      \"effect\": \"deployIfNotExists\",\r\n      \"details\": {\r\n        \"type\": \"Microsoft.Network/virtualNetworks/virtualNetworkPeerings\",\r\n        \"roleDefinitionIds\": [\r\n          \"/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7\"\r\n        ],\r\n        \"deployment\": {\r\n          \"properties\": {\r\n            \"mode\": \"incremental\",\r\n            \"parameters\": {\r\n              \"landingZoneVnetName\": {\r\n                \"value\": \"[field(''Name'')]\"\r\n              },\r\n              \"transitVnetId\": {\r\n                \"value\": \"[parameters(''transitVnetId'')]\"\r\n              }\r\n            },\r\n            \"template\": {\r\n              \"$schema\": \"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#\",\r\n              \"contentVersion\": \"1.0.0.0\",\r\n              \"parameters\": {\r\n                \"landingZoneVnetName\": {\r\n                  \"type\": \"string\"\r\n                },\r\n                \"transitVnetId\": {\r\n                  \"type\": \"string\"\r\n                }\r\n              },\r\n              \"functions\": [],\r\n              \"variables\": {\r\n                \"transitSubId\": \"[split(parameters(''transitVnetId''), ''/'')[2]]\",\r\n                \"transitSubRg\": \"[split(parameters(''transitVnetId''), ''/'')[4]]\",\r\n                \"transitVnetName\": \"[split(parameters(''transitVnetId''), ''/'')[8]]\"\r\n              },\r\n              \"resources\": [\r\n                {\r\n                  \"type\": \"Microsoft.Resources/deployments\",\r\n                  \"apiVersion\": \"2020-06-01\",\r\n                  \"name\": \"[concat(''peer-to-transit-'', variables(''transitSubId''))]\",\r\n                  \"properties\": {\r\n                    \"expressionEvaluationOptions\": {\r\n                      \"scope\": \"inner\"\r\n                    },\r\n                    \"mode\": \"Incremental\",\r\n                    \"parameters\": {\r\n                      \"allowGwTransit\": {\r\n                        \"value\": false\r\n                      },\r\n                      \"localVNetName\": {\r\n                        \"value\": \"[parameters(''landingZoneVnetName'')]\"\r\n                      },\r\n                      \"remoteVnetId\": {\r\n                        \"value\": \"[parameters(''transitVnetId'')]\"\r\n                      },\r\n                      \"remoteVNetName\": {\r\n                        \"value\": \"[variables(''transitVnetName'')]\"\r\n                      },\r\n                      \"useRemoteGw\": {\r\n                        \"value\": false\r\n                      }\r\n                    },\r\n                    \"template\": {\r\n                      \"$schema\": \"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#\",\r\n                      \"contentVersion\": \"1.0.0.0\",\r\n                      \"parameters\": {\r\n                        \"localVNetName\": {\r\n                          \"type\": \"string\"\r\n                        },\r\n                        \"remoteVNetName\": {\r\n                          \"type\": \"string\"\r\n                        },\r\n                        \"remoteVnetId\": {\r\n                          \"type\": \"string\"\r\n                        },\r\n                        \"allowGwTransit\": {\r\n                          \"type\": \"bool\",\r\n                          \"allowedValues\": [\r\n                            true,\r\n                            false\r\n                          ]\r\n                        },\r\n                        \"useRemoteGw\": {\r\n                          \"type\": \"bool\",\r\n                          \"allowedValues\": [\r\n                            true,\r\n                            false\r\n                          ]\r\n                        }\r\n                      },\r\n                      \"functions\": [],\r\n                      \"resources\": [\r\n                        {\r\n                          \"type\": \"Microsoft.Network/virtualNetworks/virtualNetworkPeerings\",\r\n                          \"apiVersion\": \"2020-11-01\",\r\n                          \"name\": \"[format(''{0}/peer-to-{1}'', parameters(''localVNetName''), parameters(''remoteVNetName''))]\",\r\n                          \"properties\": {\r\n                            \"allowForwardedTraffic\": true,\r\n                            \"allowVirtualNetworkAccess\": true,\r\n                            \"allowGatewayTransit\": \"[parameters(''allowGwTransit'')]\",\r\n                            \"useRemoteGateways\": \"[parameters(''useRemoteGw'')]\",\r\n                            \"remoteVirtualNetwork\": {\r\n                              \"id\": \"[parameters(''remoteVnetId'')]\"\r\n                            }\r\n                          }\r\n                        }\r\n                      ]\r\n                    }\r\n                  }\r\n                },\r\n                {\r\n                  \"type\": \"Microsoft.Resources/deployments\",\r\n                  \"apiVersion\": \"2020-06-01\",\r\n                  \"name\": \"[concat(''peer-from-transit-'', parameters(''landingZoneVnetName''))]\",\r\n                  \"subscriptionId\": \"[variables(''transitSubId'')]\",\r\n                  \"resourceGroup\": \"[variables(''transitSubRg'')]\",\r\n                  \"properties\": {\r\n                    \"expressionEvaluationOptions\": {\r\n                      \"scope\": \"inner\"\r\n                    },\r\n                    \"mode\": \"Incremental\",\r\n                    \"parameters\": {\r\n                      \"allowGwTransit\": {\r\n                        \"value\": false\r\n                      },\r\n                      \"localVNetName\": {\r\n                        \"value\": \"[variables(''transitVnetName'')]\"\r\n                      },\r\n                      \"remoteVnetId\": {\r\n                        \"value\": \"[concat(subscription().id, ''/resourceGroups/'', resourceGroup().name, ''/providers/Microsoft.Network/virtualNetworks/'', parameters(''landingZoneVnetName''))]\"\r\n                      },\r\n                      \"remoteVNetName\": {\r\n                        \"value\": \"[parameters(''landingZoneVnetName'')]\"\r\n                      },\r\n                      \"useRemoteGw\": {\r\n                        \"value\": false\r\n                      }\r\n                    },\r\n                    \"template\": {\r\n                      \"$schema\": \"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#\",\r\n                      \"contentVersion\": \"1.0.0.0\",\r\n                      \"parameters\": {\r\n                        \"localVNetName\": {\r\n                          \"type\": \"string\"\r\n                        },\r\n                        \"remoteVNetName\": {\r\n                          \"type\": \"string\"\r\n                        },\r\n                        \"remoteVnetId\": {\r\n                          \"type\": \"string\"\r\n                        },\r\n                        \"allowGwTransit\": {\r\n                          \"type\": \"bool\",\r\n                          \"allowedValues\": [\r\n                            true,\r\n                            false\r\n                          ]\r\n                        },\r\n                        \"useRemoteGw\": {\r\n                          \"type\": \"bool\",\r\n                          \"allowedValues\": [\r\n                            true,\r\n                            false\r\n                          ]\r\n                        }\r\n                      },\r\n                      \"functions\": [],\r\n                      \"resources\": [\r\n                        {\r\n                          \"type\": \"Microsoft.Network/virtualNetworks/virtualNetworkPeerings\",\r\n                          \"apiVersion\": \"2020-11-01\",\r\n                          \"name\": \"[format(''{0}/peer-to-{1}'', parameters(''localVNetName''), parameters(''remoteVNetName''))]\",\r\n                          \"properties\": {\r\n                            \"allowForwardedTraffic\": true,\r\n                            \"allowVirtualNetworkAccess\": true,\r\n                            \"allowGatewayTransit\": \"[parameters(''allowGwTransit'')]\",\r\n                            \"useRemoteGateways\": \"[parameters(''useRemoteGw'')]\",\r\n                            \"remoteVirtualNetwork\": {\r\n                              \"id\": \"[parameters(''remoteVnetId'')]\"\r\n                            }\r\n                          }\r\n                        }\r\n                      ]\r\n                    }\r\n                  }\r\n                }\r\n              ]\r\n            }\r\n          }\r\n        }\r\n      }\r\n    }\r\n  },\r\n  \"parameters\": {\r\n    \"transitVnetId\": {\r\n      \"type\": \"String\",\r\n      \"metadata\": {\r\n        \"displayName\": \"transitVnetId\",\r\n        \"description\": null\r\n      }\r\n    },\r\n    \"location\": {\r\n      \"type\": \"String\",\r\n      \"metadata\": {\r\n        \"displayName\": \"Azure region\",\r\n        \"strongType\": \"location\",\r\n        \"description\": null\r\n      }\r\n    }\r\n  }\r\n}')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-06-01",
+      "name": "create-DNSAppend-Policy",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "policyDescription": {
+            "value": "[variables('dnsPolicy').Description]"
+          },
+          "policyDisplayName": {
+            "value": "[variables('dnsPolicy').DisplayName]"
+          },
+          "policyName": {
+            "value": "[variables('dnsPolicy').Name]"
+          },
+          "policyParameters": {
+            "value": "[variables('dnsPolicy').parameters]"
+          },
+          "policyRule": {
+            "value": "[variables('dnsPolicy').policyRule]"
+          },
+          "mode": {
+            "value": "[variables('dnsPolicy').mode]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1008.15138",
+              "templateHash": "8585385980483639265"
+            }
+          },
+          "parameters": {
+            "policyName": {
+              "type": "string"
+            },
+            "policyRule": {
+              "type": "object"
+            },
+            "policyDescription": {
+              "type": "string"
+            },
+            "policyDisplayName": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "defaultValue": "indexed"
+            },
+            "policyParameters": {
+              "type": "object"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/policyDefinitions",
+              "apiVersion": "2020-09-01",
+              "name": "[parameters('policyName')]",
+              "properties": {
+                "policyRule": "[parameters('policyRule')]",
+                "policyType": "Custom",
+                "mode": "[parameters('mode')]",
+                "description": "[parameters('policyDescription')]",
+                "displayName": "[parameters('policyDisplayName')]",
+                "parameters": "[parameters('policyParameters')]"
+              }
+            }
+          ],
+          "outputs": {
+            "policyId": {
+              "type": "string",
+              "value": "[extensionResourceId(managementGroup().id, 'Microsoft.Authorization/policyDefinitions', parameters('policyName'))]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-06-01",
+      "name": "create-RouteTableAttach-policy",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "policyDescription": {
+            "value": "[variables('routePolicy').Description]"
+          },
+          "policyDisplayName": {
+            "value": "[variables('routePolicy').DisplayName]"
+          },
+          "policyName": {
+            "value": "[variables('routePolicy').Name]"
+          },
+          "policyParameters": {
+            "value": "[variables('routePolicy').parameters]"
+          },
+          "policyRule": {
+            "value": "[variables('routePolicy').policyRule]"
+          },
+          "mode": {
+            "value": "[variables('routePolicy').mode]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1008.15138",
+              "templateHash": "8585385980483639265"
+            }
+          },
+          "parameters": {
+            "policyName": {
+              "type": "string"
+            },
+            "policyRule": {
+              "type": "object"
+            },
+            "policyDescription": {
+              "type": "string"
+            },
+            "policyDisplayName": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "defaultValue": "indexed"
+            },
+            "policyParameters": {
+              "type": "object"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/policyDefinitions",
+              "apiVersion": "2020-09-01",
+              "name": "[parameters('policyName')]",
+              "properties": {
+                "policyRule": "[parameters('policyRule')]",
+                "policyType": "Custom",
+                "mode": "[parameters('mode')]",
+                "description": "[parameters('policyDescription')]",
+                "displayName": "[parameters('policyDisplayName')]",
+                "parameters": "[parameters('policyParameters')]"
+              }
+            }
+          ],
+          "outputs": {
+            "policyId": {
+              "type": "string",
+              "value": "[extensionResourceId(managementGroup().id, 'Microsoft.Authorization/policyDefinitions', parameters('policyName'))]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-06-01",
+      "name": "create-NSGAttach-policy",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "policyDescription": {
+            "value": "[variables('nsgPolicy').Description]"
+          },
+          "policyDisplayName": {
+            "value": "[variables('nsgPolicy').DisplayName]"
+          },
+          "policyName": {
+            "value": "[variables('nsgPolicy').Name]"
+          },
+          "policyParameters": {
+            "value": "[variables('nsgPolicy').parameters]"
+          },
+          "policyRule": {
+            "value": "[variables('nsgPolicy').policyRule]"
+          },
+          "mode": {
+            "value": "[variables('nsgPolicy').mode]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1008.15138",
+              "templateHash": "8585385980483639265"
+            }
+          },
+          "parameters": {
+            "policyName": {
+              "type": "string"
+            },
+            "policyRule": {
+              "type": "object"
+            },
+            "policyDescription": {
+              "type": "string"
+            },
+            "policyDisplayName": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "defaultValue": "indexed"
+            },
+            "policyParameters": {
+              "type": "object"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/policyDefinitions",
+              "apiVersion": "2020-09-01",
+              "name": "[parameters('policyName')]",
+              "properties": {
+                "policyRule": "[parameters('policyRule')]",
+                "policyType": "Custom",
+                "mode": "[parameters('mode')]",
+                "description": "[parameters('policyDescription')]",
+                "displayName": "[parameters('policyDisplayName')]",
+                "parameters": "[parameters('policyParameters')]"
+              }
+            }
+          ],
+          "outputs": {
+            "policyId": {
+              "type": "string",
+              "value": "[extensionResourceId(managementGroup().id, 'Microsoft.Authorization/policyDefinitions', parameters('policyName'))]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-06-01",
+      "name": "create-vnetPeer-policy",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "policyDescription": {
+            "value": "[variables('peerPolicy').Description]"
+          },
+          "policyDisplayName": {
+            "value": "[variables('peerPolicy').DisplayName]"
+          },
+          "policyName": {
+            "value": "[variables('peerPolicy').Name]"
+          },
+          "policyParameters": {
+            "value": "[variables('peerPolicy').parameters]"
+          },
+          "policyRule": {
+            "value": "[variables('peerPolicy').policyRule]"
+          },
+          "mode": {
+            "value": "[variables('peerPolicy').mode]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1008.15138",
+              "templateHash": "8585385980483639265"
+            }
+          },
+          "parameters": {
+            "policyName": {
+              "type": "string"
+            },
+            "policyRule": {
+              "type": "object"
+            },
+            "policyDescription": {
+              "type": "string"
+            },
+            "policyDisplayName": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string",
+              "defaultValue": "indexed"
+            },
+            "policyParameters": {
+              "type": "object"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/policyDefinitions",
+              "apiVersion": "2020-09-01",
+              "name": "[parameters('policyName')]",
+              "properties": {
+                "policyRule": "[parameters('policyRule')]",
+                "policyType": "Custom",
+                "mode": "[parameters('mode')]",
+                "description": "[parameters('policyDescription')]",
+                "displayName": "[parameters('policyDisplayName')]",
+                "parameters": "[parameters('policyParameters')]"
+              }
+            }
+          ],
+          "outputs": {
+            "policyId": {
+              "type": "string",
+              "value": "[extensionResourceId(managementGroup().id, 'Microsoft.Authorization/policyDefinitions', parameters('policyName'))]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-06-01",
+      "name": "create-network-initiative",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "description": {
+            "value": "This set of policy deploys a defined network configuration to all virtual networks in a subscription."
+          },
+          "displayName": {
+            "value": "Subscription network configuration"
+          },
+          "initiativeName": {
+            "value": "Network-Configuration"
+          },
+          "parameters": {
+            "value": {
+              "dns": {
+                "type": "array"
+              },
+              "routeTable": {
+                "type": "object"
+              },
+              "nsg": {
+                "type": "object"
+              },
+              "location": {
+                "type": "string"
+              },
+              "transitVnetId": {
+                "type": "string"
+              }
+            }
+          },
+          "policyDefinitions": {
+            "value": [
+              {
+                "policyDefinitionId": "[reference(extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'create-DNSAppend-Policy'), '2020-06-01').outputs.policyId.value]",
+                "parameters": {
+                  "dns": {
+                    "value": "[[parameters('dns')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[reference(extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'create-RouteTableAttach-policy'), '2020-06-01').outputs.policyId.value]",
+                "parameters": {
+                  "routeTable": {
+                    "value": "[[parameters('routeTable')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[reference(extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'create-NSGAttach-policy'), '2020-06-01').outputs.policyId.value]",
+                "parameters": {
+                  "nsg": {
+                    "value": "[[parameters('nsg')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[reference(extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'create-vnetPeer-policy'), '2020-06-01').outputs.policyId.value]",
+                "parameters": {
+                  "location": {
+                    "value": "[[parameters('location')]"
+                  },
+                  "transitVnetId": {
+                    "value": "[[parameters('transitVnetId')]"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1008.15138",
+              "templateHash": "13789468456316776166"
+            }
+          },
+          "parameters": {
+            "initiativeName": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "parameters": {
+              "type": "object"
+            },
+            "policyDefinitions": {
+              "type": "array"
+            }
+          },
+          "functions": [],
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/policySetDefinitions",
+              "apiVersion": "2020-09-01",
+              "name": "[parameters('initiativeName')]",
+              "properties": {
+                "description": "[parameters('description')]",
+                "displayName": "[parameters('displayName')]",
+                "policyType": "Custom",
+                "parameters": "[parameters('parameters')]",
+                "policyDefinitions": "[parameters('policyDefinitions')]"
+              }
+            }
+          ],
+          "outputs": {
+            "policyInitiativeId": {
+              "type": "string",
+              "value": "[extensionResourceId(managementGroup().id, 'Microsoft.Authorization/policySetDefinitions', parameters('initiativeName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'create-DNSAppend-Policy')]",
+        "[extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'create-NSGAttach-policy')]",
+        "[extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'create-RouteTableAttach-policy')]",
+        "[extensionResourceId(managementGroup().id, 'Microsoft.Resources/deployments', 'create-vnetPeer-policy')]"
+      ]
+    }
+  ]
+}
