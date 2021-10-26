@@ -14,7 +14,7 @@
             },
             {
               "field": "location",
-              "equals": "[parameters('location')]"
+              "matchInsensitively": "[parameters('location')]"
             },
             {
               "field": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings[*].remoteVirtualNetwork.id",

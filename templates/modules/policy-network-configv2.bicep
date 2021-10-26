@@ -11,6 +11,7 @@ param location string
 param transitVnetId string
 param managementGroup string
 param dnsServers array
+param identityResourceId string
 
 var locationUpper = toUpper(location)
 var locationShortName = replace(replace(replace(replace(replace(locationUpper, 'EAST', 'E'), 'WEST', 'W'), 'NORTH', 'N'), 'SOUTH', 'S'), 'CENTRAL', 'C')
@@ -163,7 +164,10 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                     'dependsOn': []
                     'name': '${locationShortName}-Network-Config'
                     'identity': {
-                      'type': 'SystemAssigned'
+                      'type': 'UserAssigned'
+                      'userAssignedIdentities': {
+                        '${identityResourceId}': {}
+                      }
                     }
                     'location': location
                     'properties': {
