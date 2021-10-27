@@ -5,8 +5,9 @@ param location string           = 'eastus'
 param transitVnetId string      = ''
 param managedIdentityId string  = ''
 
-var peerPolicy          = json(loadTextContent('policy/policy-vnet-peering.json'))
-var nonCompliance       = 'Connect VNet to corporate transit network'
+var peerPolicy                  = json(loadTextContent('policy/policy-vnet-peering.json'))
+var description                 = '${toUpper(location)} - Create VNet peering with transit VNet'
+var nonCompliance               = 'Connect VNet to corporate transit network'
 
 
 module vnetPeering 'modules/policy-definition.bicep' = {
@@ -37,7 +38,7 @@ module assignPolicy 'modules/policy-assign-managedidentity.bicep' = {
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: assignmentName
     policyDefinitionId: vnetPeering.outputs.policyId
-    policyDescription: peerPolicy.Description
+    policyDescription: description
     policyParameters: {
       location: {
         value: location
