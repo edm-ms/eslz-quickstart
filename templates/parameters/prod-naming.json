@@ -2,247 +2,247 @@
   {
     "nameFormat": "ase-prod-*",
     "policyMode": "Indexed",
-    "resource": "App Service Environment",
+    "resource": "App Service Environment: ase",
     "resourceType": "Microsoft.Web/hostingEnvironments"
   },
   {
     "nameFormat": "asp-prod-*",
     "policyMode": "Indexed",
-    "resource": "App Service Plan",
+    "resource": "App Service Plan: asp",
     "resourceType": "Microsoft.Web/serverfarms"
   },
   {
     "nameFormat": "agw-prod-*",
     "policyMode": "Indexed",
-    "resource": "Application Gateway",
+    "resource": "Application Gateway: agw",
     "resourceType": "Microsoft.Network/applicationGateways"
   },
   {
     "nameFormat": "asg-prod-*",
     "policyMode": "Indexed",
-    "resource": "Application Security Groups",
+    "resource": "Application Security Groups: asg",
     "resourceType": "Microsoft.Network/applicationSecurityGroups"
   },
   {
     "nameFormat": "as-prod-*",
     "policyMode": "Indexed",
-    "resource": "Availability Sets",
+    "resource": "Availability Sets: as",
     "resourceType": "Microsoft.Compute/availabilitySets"
   },
   {
     "nameFormat": "azb-prod-*",
     "policyMode": "Indexed",
-    "resource": "Azure Bastion",
+    "resource": "Azure Bastion: azb",
     "resourceType": "Microsoft.Network/bastionHosts"
   },
   {
     "nameFormat": "acr-prod-*",
     "policyMode": "Indexed",
-    "resource": "Azure Container Registry",
+    "resource": "Azure Container Registry: acr",
     "resourceType": "Microsoft.ContainerRegistry/registries"
   },
   {
     "nameFormat": "adf-prod-*",
     "policyMode": "Indexed",
-    "resource": "Azure Data Factory",
+    "resource": "Azure Data Factory: adf",
     "resourceType": "Microsoft.DataFactory/factories"
   },
   {
     "nameFormat": "adb-prod-*",
     "policyMode": "Indexed",
-    "resource": "Azure Databricks",
+    "resource": "Azure Databricks: adb",
     "resourceType": "Microsoft.Databricks/workspaces"
   },
   {
     "nameFormat": "azfw-prod-*",
     "policyMode": "Indexed",
-    "resource": "Azure Firewall",
+    "resource": "Azure Firewall: azfw",
     "resourceType": "Microsoft.Network/azureFirewalls"
   },
   {
     "nameFormat": "afd-prod-*",
     "policyMode": "Indexed",
-    "resource": "Azure Front Door",
+    "resource": "Azure Front Door: afd",
     "resourceType": "Microsoft.Network/frontDoors"
   },
   {
     "nameFormat": "aks-prod-*",
     "policyMode": "Indexed",
-    "resource": "Azure Kubernetes Service",
+    "resource": "Azure Kubernetes Service: aks",
     "resourceType": "Microsoft.ContainerService/managedClusters"
   },
   {
     "nameFormat": "alb-prod-*",
     "policyMode": "Indexed",
-    "resource": "Azure Load Balancer",
+    "resource": "Azure Load Balancer: alb",
     "resourceType": "Microsoft.Network/loadBalancers"
   },
   {
     "nameFormat": "ehc-prod-*",
     "policyMode": "Indexed",
-    "resource": "Event Hub Cluster",
+    "resource": "Event Hub Cluster: ehc",
     "resourceType": "Microsoft.EventHub/clusters"
   },
   {
     "nameFormat": "ehn-prod-*",
     "policyMode": "Indexed",
-    "resource": "Event Hub Namespace",
+    "resource": "Event Hub Namespace: enh",
     "resourceType": "Microsoft.EventHub/namespaces"
   },
   {
     "nameFormat": "erc-prod-*",
     "policyMode": "Indexed",
-    "resource": "ExpressRoute Circuit",
+    "resource": "ExpressRoute Circuit: erc",
     "resourceType": "Microsoft.Network/expressRouteCircuits"
   },
   {
     "nameFormat": "erg-prod-*",
     "policyMode": "Indexed",
-    "resource": "ExpressRoute Gateway",
+    "resource": "ExpressRoute Gateway: erg",
     "resourceType": "Microsoft.Network/expressRouteGateways"
   },
   {
     "nameFormat": "fwp-prod-*",
     "policyMode": "Indexed",
-    "resource": "Firewall Policy",
+    "resource": "Firewall Policy: fwp",
     "resourceType": "Microsoft.Network/firewallPolicies"
   },
   {
     "nameFormat": "iot-prod-*",
     "policyMode": "Indexed",
-    "resource": "IoT Hub",
+    "resource": "IoT Hub: iot",
     "resourceType": "Microsoft.Devices/IotHubs"
   },
   {
     "nameFormat": "kv-prod-*",
     "policyMode": "Indexed",
-    "resource": "Key Vaults",
+    "resource": "Key Vaults: kv",
     "resourceType": "Microsoft.KeyVault/vaults"
   },
   {
     "nameFormat": "law-prod-*",
     "policyMode": "Indexed",
-    "resource": "Log Analytics Workspace",
+    "resource": "Log Analytics Workspace: law",
     "resourceType": "Microsoft.OperationalInsights/workspaces"
   },
   {
     "nameFormat": "nsg-prod-*",
     "policyMode": "Indexed",
-    "resource": "Network Security Groups",
+    "resource": "Network Security Groups: nsg",
     "resourceType": "Microsoft.Network/networkSecurityGroups"
   },
   {
     "nameFormat": "pl-prod-*",
     "policyMode": "Indexed",
-    "resource": "Private Link",
+    "resource": "Private Link: pl",
     "resourceType": "Microsoft.Network/privateEndpoints"
   },
   {
     "nameFormat": "pip-prod-*",
     "policyMode": "Indexed",
-    "resource": "Public IP Addresses",
+    "resource": "Public IP Addresses: pip",
     "resourceType": "Microsoft.Network/publicIPAddresses"
   },
   {
     "nameFormat": "rsv-prod-*",
     "policyMode": "Indexed",
-    "resource": "Recovery Services Vault",
+    "resource": "Recovery Services Vault: rsv",
     "resourceType": "Microsoft.RecoveryServices/vaults"
   },
   {
     "nameFormat": "rg-prod-*",
     "policyMode": "All",
-    "resource": "Resource Groups",
+    "resource": "Resource Groups: rg",
     "resourceType": "Microsoft.Resources/subscriptions/resourcegroups"
   },
   {
     "nameFormat": "rt-prod-*",
     "policyMode": "Indexed",
-    "resource": "Route Tables",
+    "resource": "Route Tables: rt",
     "resourceType": "Microsoft.Network/routeTables"
   },
   {
     "nameFormat": "sqldb-prod-*",
     "policyMode": "Indexed",
-    "resource": "SQL Databases",
+    "resource": "SQL Databases: sqldb",
     "resourceType": "Microsoft.Sql/servers/databases"
   },
   {
     "nameFormat": "sqlsrv-prod-*",
     "policyMode": "Indexed",
-    "resource": "SQL Servers",
+    "resource": "SQL Servers: sqlsrv",
     "resourceType": "Microsoft.Sql/servers"
   },
   {
     "nameFormat": "sb-prod-*",
     "policyMode": "Indexed",
-    "resource": "Service Bus",
+    "resource": "Service Bus: sb",
     "resourceType": "Microsoft.ServiceBus/namespaces"
   },
   {
     "nameFormat": "sig-prod-*",
     "policyMode": "Indexed",
-    "resource": "Shared Image Gallery",
+    "resource": "Shared Image Gallery: sig",
     "resourceType": "Microsoft.Compute/galleries"
   },
   {
     "nameFormat": "syn-prod-*",
     "policyMode": "Indexed",
-    "resource": "Synapse",
+    "resource": "Synapse: syn",
     "resourceType": "Microsoft.Synapse/workspaces"
   },
   {
     "nameFormat": "tmp-prod-*",
     "policyMode": "Indexed",
-    "resource": "Traffic Manager Profile",
+    "resource": "Traffic Manager Profile: tmp",
     "resourceType": "Microsoft.Network/trafficmanagerprofiles"
   },
   {
     "nameFormat": "uai-prod-*",
     "policyMode": "Indexed",
-    "resource": "User Assigned Identity",
+    "resource": "User Assigned Identity: uai",
     "resourceType": "Microsoft.ManagedIdentity/userAssignedIdentities"
   },
   {
     "nameFormat": "vpng-prod-*",
     "policyMode": "Indexed",
-    "resource": "VPN Gateway",
+    "resource": "VPN Gateway: vpng",
     "resourceType": "Microsoft.Network/vpnGateways"
   },
   {
     "nameFormat": "img-prod-*",
     "policyMode": "Indexed",
-    "resource": "Virtual Machine Images",
+    "resource": "Virtual Machine Images: img",
     "resourceType": "Microsoft.Compute/images"
   },
   {
     "nameFormat": "vmss-prod-*",
     "policyMode": "Indexed",
-    "resource": "Virtual Machine Scale Sets",
+    "resource": "Virtual Machine Scale Sets: vmss",
     "resourceType": "Microsoft.Compute/virtualMachineScaleSets/virtualmachines"
   },
   {
     "nameFormat": "vng-prod-*",
     "policyMode": "Indexed",
-    "resource": "Virtual Network Gateway",
+    "resource": "Virtual Network Gateway: vng",
     "resourceType": "Microsoft.Network/virtualNetworkGateways"
   },
   {
     "nameFormat": "vnet-prod-*",
     "policyMode": "Indexed",
-    "resource": "Virtual Networks",
+    "resource": "Virtual Networks: vnet",
     "resourceType": "Microsoft.Network/virtualNetworks"
   },
   {
     "nameFormat": "vw-prod-*",
     "policyMode": "Indexed",
-    "resource": "Virtual WAN",
+    "resource": "Virtual WAN: vw",
     "resourceType": "Microsoft.Network/virtualWans"
   },
   {
     "nameFormat": "vwh-prod-*",
     "policyMode": "Indexed",
-    "resource": "Virtual WAN Hub",
+    "resource": "Virtual WAN Hub: vwh",
     "resourceType": "Microsoft.Network/virtualHubs"
   }
 ]
