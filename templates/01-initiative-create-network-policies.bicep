@@ -3,7 +3,6 @@ targetScope = 'managementGroup'
 var dnsPolicy           = json(loadTextContent('policy/policy-append-dns.json'))
 var routePolicy         = json(loadTextContent('policy/policy-attach-routetable.json'))
 var nsgPolicy           = json(loadTextContent('policy/policy-attach-nsg.json'))
-var peerPolicy          = json(loadTextContent('policy/policy-vnet-peering.json'))
 
 module dnsAppendPolicy 'modules/policy-definition.bicep' = {
   name: 'create-DNSAppend-Policy'
@@ -41,18 +40,6 @@ module nsgAttach 'modules/policy-definition.bicep' = {
   }
 }
 
-module vnetPeering 'modules/policy-definition.bicep' = {
-  name: 'create-vnetPeer-policy'
-  params: {
-    policyDescription: peerPolicy.Description
-    policyDisplayName: peerPolicy.DisplayName
-    policyName: peerPolicy.Name
-    policyParameters: peerPolicy.parameters
-    policyRule: peerPolicy.policyRule
-    mode: peerPolicy.mode
-  }
-}
-
 module networkInitiative 'modules/policy-initiative.bicep' = {
   name: 'create-network-initiative'
   params: {
@@ -68,12 +55,6 @@ module networkInitiative 'modules/policy-initiative.bicep' = {
       }
       nsg: {
         type: 'object'
-      }
-      location: { 
-        type: 'string'
-      }
-      transitVnetId: {
-        type: 'string'
       }
     }
     policyDefinitions: [
@@ -98,17 +79,6 @@ module networkInitiative 'modules/policy-initiative.bicep' = {
         parameters: {
           nsg: {
             value: '[parameters(\'nsg\')]'
-          }
-        }
-      }
-      {
-        policyDefinitionId: vnetPeering.outputs.policyId
-        parameters: {
-          location: {
-            value: '[parameters(\'location\')]'
-          }
-          transitVnetId: {
-            value: '[parameters(\'transitVnetId\')]'
           }
         }
       }      

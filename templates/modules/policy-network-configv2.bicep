@@ -8,7 +8,6 @@ param resourceGroupName string
 param routeTables array
 param nsgList array
 param location string
-param transitVnetId string
 param managementGroup string
 param dnsServers array
 
@@ -180,12 +179,6 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                         }
                         'nsg': {
                           'value': '[reference(concat(subscription().id, \'/resourceGroups/\', \'${resourceGroupName}\', \'/providers/Microsoft.Resources/deployments/\', \'${deploymentName}\'), \'2019-10-01\').outputs.nsgPolicyParam.value]'
-                        }
-                        'location': {
-                          'value': location
-                        }
-                        'transitVnetId': {
-                          'value': transitVnetId
                         }
                       }
                       'notScopes': ''
