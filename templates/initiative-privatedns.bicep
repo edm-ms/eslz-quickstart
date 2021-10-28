@@ -69,6 +69,9 @@ module privateDnsZones 'modules/private-dns.bicep' = [for i in range(0, length(d
 module connectDns 'modules/dns-connection.bicep' = [for i in range(0, length(dnsZoneParameters)): {
   scope: resourceGroup(networkSubId, dnsResourceGroupName)
   name: 'DNS-Connections-${dnsZoneParameters[i].resource}'
+  dependsOn: [
+    privateDnsZones
+  ]
   params: {
     vnetID: dnsLinkedVnetId
     connectionName: 'Connection-to-${dnsLinkedVnetName}'
@@ -78,6 +81,9 @@ module connectDns 'modules/dns-connection.bicep' = [for i in range(0, length(dns
 
 module dnsPolicy 'modules/policy-privatelink-dns.bicep' = [for i in range(0, length(dnsZoneParameters)): {
   name: 'DNS-Policy-${dnsZoneParameters[i].resource}-${time}'
+  dependsOn: [
+    privateDnsZones
+  ]
   params: {
     name: 'PrivateDNS-${dnsZoneParameters[i].resource}'
     groupId: dnsZoneParameters[i].groupId
