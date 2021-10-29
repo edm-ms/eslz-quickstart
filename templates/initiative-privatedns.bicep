@@ -3,16 +3,15 @@ targetScope                           = 'managementGroup'
 param dnsResourceGroupName string     = 'rg-prod-global-privatedns'
 param networkSubId string             = '<>'
   @description('VNet to link private DNS zones')
-param dnsSubId string                 = '<>'
-param dnsVnetName string              = '<>'
-param dnsVnetResourceGroupName string = '<>'
+param dnsLinkedVnetId string          = '<>'        
 param location string                 = 'eastus'
 param time string                     = utcNow()
+param dnsZoneParameters array         = json(loadTextContent('parameters/private-dns.json'))
 
-var dnsZoneParameters                 = json(loadTextContent('parameters/private-dns.json'))
 var privateDNSPolicy                  = json(loadTextContent('policy/policy-deny-privatelinkdns.json'))
 var nonComplianceMessage              = '''Private Link DNS Zones are already created: Choose "No" for "Integrate with Private DNS zone"'''
 var managementGroupName               = managementGroup().name
+var dnsLinkedVnetName                 = split(dnsLinkedVnetId, '/')[8]
 
 module dnsResourceGroup 'modules/resource-group.bicep' = {
   scope: subscription(networkSubId)
@@ -21,11 +20,6 @@ module dnsResourceGroup 'modules/resource-group.bicep' = {
     location: location
     resourceGroupName: dnsResourceGroupName 
   }
-}
-
-resource dnsLinkedVnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing = {
-  name: dnsVnetName
-  scope: resourceGroup(dnsSubId, dnsVnetResourceGroupName)
 }
 module denyPrivateDns 'modules/policy-definition.bicep' = {
   name: 'create-denyPrivateDNS-policy'
@@ -75,15 +69,21 @@ module privateDnsZones 'modules/private-dns.bicep' = [for i in range(0, length(d
 module connectDns 'modules/dns-connection.bicep' = [for i in range(0, length(dnsZoneParameters)): {
   scope: resourceGroup(networkSubId, dnsResourceGroupName)
   name: 'DNS-Connections-${dnsZoneParameters[i].resource}'
+  dependsOn: [
+    privateDnsZones
+  ]
   params: {
-    vnetID: dnsLinkedVnet.id
-    connectionName: 'Connection-to-${dnsLinkedVnet.name}'
+    vnetID: dnsLinkedVnetId
+    connectionName: 'Connection-to-${dnsLinkedVnetName}'
     dnsZoneName: dnsZoneParameters[i].zoneName
   }
 }]
 
 module dnsPolicy 'modules/policy-privatelink-dns.bicep' = [for i in range(0, length(dnsZoneParameters)): {
   name: 'DNS-Policy-${dnsZoneParameters[i].resource}-${time}'
+  dependsOn: [
+    privateDnsZones
+  ]
   params: {
     name: 'PrivateDNS-${dnsZoneParameters[i].resource}'
     groupId: dnsZoneParameters[i].groupId

@@ -20,8 +20,14 @@ module regionsInitiative 'modules/policy-initiative.bicep' = {
   }
 }
 
+module waitForPolicy 'modules/delay.bicep' = {
+  name: 'delayForPolicy'
+}
 module policy 'modules/policy-assign-systemidentity.bicep' = {
   name: policyDeployment
+  dependsOn: [
+    waitForPolicy
+  ]
   params: {
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: assignmentName
