@@ -5,8 +5,10 @@ param resourceName string
 param mode string = 'Indexed'
 param roleIds array
 
+var policyName = replace(resourceName, ' ', '-')
+
 resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
-  name: 'Deploy resource lock for ${resourceName}'
+  name: 'Lock-${policyName}'
   properties: {
     description: 'This policy deploys resource locks for ${resourceName}'
     displayName: 'Deploy resource lock for ${resourceName}'
