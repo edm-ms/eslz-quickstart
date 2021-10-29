@@ -75,3 +75,4 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
 }
 
 output policyId string = policy.id
+output policyName string = policyName

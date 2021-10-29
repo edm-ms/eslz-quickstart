@@ -2,7 +2,7 @@ targetScope = 'managementGroup'
 
 param description string        = 'This initiative deploys resource locks for defined resource types'
 param display string            = 'Deploy resource locks for critical resources'
-param name string               = 'Deploy resource locks for critical resources'
+param name string               = 'Deploy-Resource-Locks'
 param assignmentName string     = 'Deploy-ResourceLocks'
 param location string           = 'eastus'
 param lockValues array           = json(loadTextContent('parameters/resource-locks.json'))
@@ -32,12 +32,23 @@ module createInitiative 'modules/policy-initiative.bicep' = {
     parameters: {}
     policyDefinitions: [for i in range(0, length(lockValues)): {
      policyDefinitionId: locks[i].outputs.policyId
+     policyDefinitionReferenceId: locks[i].outputs.policyName
     }]
   }
 }
 
+module waitForInitiative 'modules/delay.bicep' = {
+  name: 'delay-Initiative'
+  dependsOn: [
+    createInitiative
+  ]
+}
+
 module assignInit 'modules/policy-assign-systemidentity.bicep' = {
   name: 'assignPolicy'
+  dependsOn: [
+    waitForInitiative
+  ]
   params: {
     location: location
     nonComplianceMessage: 'Please apply resource lock'
@@ -50,8 +61,18 @@ module assignInit 'modules/policy-assign-systemidentity.bicep' = {
   }
 }
 
+module waitForAssign 'modules/delay.bicep' = {
+  name: 'delay-Assignment'
+  dependsOn: [
+    assignInit
+  ]
+}
+
 module assignRole 'modules/role-assign-managementgroup.bicep' = {
   name: 'assignRole'
+  dependsOn: [
+    waitForAssign
+  ]
   params: {
     assignmentName: assignmentName
     principalId:  assignInit.outputs.policyIdentity

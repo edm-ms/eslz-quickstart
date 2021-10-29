@@ -1,11 +1,10 @@
 targetScope                     = 'managementGroup'
 
 param nsgLocation string        = 'EastUS'
-param storageId string          = '<>'
-param lawLocation string        = 'EastUS'
-param lawGuid string            = '<>'
-param lawResourceId string      = '<>'
 param networkWatcherRg string   = 'NetworkWatcherRG'
+param logWorkspaceId string     = '<>'
+param connectivitySubId string  = '<>'
+param nsgStorageRg string       = 'rg-prod-eus-nsgflowlogs'
 
 var definitionId = '/providers/Microsoft.Authorization/policyDefinitions/5e1cd26a-5090-4fdb-9d6a-84a90335e22d'
 var noncompliance = '${description} - ${nsgLocation}'
@@ -14,6 +13,36 @@ var shortRegion = replace(replace(replace(replace(replace(nsgNameFix, 'east', 'e
 var region = toUpper(shortRegion)
 var assignmentName = '${region}-NSG-Flow'
 var description = '${toUpper(nsgLocation)} - Enable NSG FLow Logs'
+var workspaceSub = split(logWorkspaceId, '/')[2]
+var workspaceRg = split(logWorkspaceId, '/')[4]
+var workspaceName = split(logWorkspaceId, '/')[8]
+var nsgStorageName = 'nsgflow${replace(take(guid(connectivitySubId, nsgStorageRg), 10), '-', '')}'
+
+module rg 'modules/resource-group.bicep' = {
+  scope: subscription(connectivitySubId)
+  name: nsgStorageRg
+  params: {
+    location: nsgLocation
+    resourceGroupName: nsgStorageRg
+  }
+}
+module storage 'modules/storage.bicep' = {
+  scope: resourceGroup(connectivitySubId, nsgStorageRg)
+  dependsOn: [
+    rg
+  ]
+  name: 'create-NSG-storage'
+  params: {
+    sku: 'Standard_LRS'
+    storageName: nsgStorageName
+  }
+}
+
+
+resource law 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
+  name: workspaceName
+  scope: resourceGroup(workspaceSub, workspaceRg)
+}
 
 module nsgpolicy 'modules/policy-assign-systemidentity.bicep' = {
   name: 'nsgflow'
@@ -33,16 +62,16 @@ module nsgpolicy 'modules/policy-assign-systemidentity.bicep' = {
         value: nsgLocation
       }
       storageId: {
-        value: storageId
+        value: storage.outputs.storageId
       }
       workspaceRegion: {
-        value: lawLocation
+        value: law.location
       }
       workspaceId: {
-        value: lawGuid
+        value: law.properties.customerId
       }
       workspaceResourceId: {
-        value: lawResourceId
+        value: logWorkspaceId
       }
       networkWatcherRG: {
         value: networkWatcherRg
