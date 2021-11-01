@@ -5,12 +5,15 @@ param initiativeName string          = 'Prod-Naming'
 param nonComplianceMessage string    = 'Required Name Format: <shortName>-prod-'
 param location string                =  'eastus'
 param namingStandard array           =  json(loadTextContent('parameters/prod-naming.json'))
+param assignmentExclusions array     = [
+  
+]
 
 var policyDeployment                 = '${initiativeName}-${guid(time)}'
 
 
 module namingPolicies 'modules/policy-naming.bicep' = [for i in range(0,length(namingStandard)): {
-  name: replace(namingStandard[i].resource, ' ', '')
+  name: '${replace(namingStandard[i].resource, ' ', '')}-${guid(time)}'
   params: {
     policyName: 'Prod-Name-${replace(namingStandard[i].resource, ' ', '')}'
     description: 'Production naming format for ${namingStandard[i].resource}'
@@ -22,7 +25,7 @@ module namingPolicies 'modules/policy-naming.bicep' = [for i in range(0,length(n
 }]
 
 module initiativeDelay 'modules/delay.bicep' = {
-  name: 'delay-for-initiative'
+  name: 'delay-${guid(time)}'
   dependsOn: [
     namingPolicies
   ]
@@ -43,7 +46,7 @@ resource namingInitiative 'Microsoft.Authorization/policySetDefinitions@2020-09-
 }
 
 module assignDelay 'modules/delay.bicep' = {
-  name: 'delay-for-role'
+  name: 'delay-policy-${guid(time)}'
   dependsOn: [
     namingInitiative
   ]
@@ -62,6 +65,6 @@ module assignInitiative 'modules/policy-assign-systemidentity.bicep' = {
     nonComplianceMessage: nonComplianceMessage
     policyDisplayName: initiativeDescription
     location: location
-    exclusions: []
+    exclusions: assignmentExclusions
   }
 }
