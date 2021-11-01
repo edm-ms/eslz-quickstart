@@ -15,7 +15,7 @@ module namingPolicies 'modules/policy-naming.bicep' = [for i in range(0,length(n
   name: '${trim(split(namingStandard[i].resource, ':')[1])}-${guid(time)}'
   params: {
     policyName: 'Prod-Name-${replace(split(namingStandard[i].resource, ':')[0], ' ', '')}'
-    description: 'Production naming format for ${namingStandard[i].resource}'
+    description: 'Production naming format for ${split(namingStandard[i].resource, ':')[0]}'
     nameMatch: namingStandard[i].nameFormat
     resourceType: namingStandard[i].resourceType
     mode: namingStandard[i].policyMode
