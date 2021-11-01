@@ -13,9 +13,9 @@ var policyDeployment                 = '${initiativeName}-${guid(time)}'
 
 
 module namingPolicies 'modules/policy-naming.bicep' = [for i in range(0,length(namingStandard)): {
-  name: '${replace(namingStandard[i].resource, ' ', '')}-${guid(time)}'
+  name: '${replace(replace(namingStandard[i].resource, ' ', ''), ':', '')}-${guid(time)}'
   params: {
-    policyName: 'Prod-Name-${replace(replace(namingStandard[i].resource, ' ', ''), ':', '')}'
+    policyName: 'Prod-Name-${replace(namingStandard[i].resource, ' ', '')}'
     description: 'Production naming format for ${namingStandard[i].resource}'
     nameMatch: namingStandard[i].nameFormat
     resourceType: namingStandard[i].resourceType
