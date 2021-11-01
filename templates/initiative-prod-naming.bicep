@@ -4,9 +4,10 @@ param initiativeDescription string   = 'Production naming convention for resourc
 param initiativeName string          = 'Prod-Naming'
 param nonComplianceMessage string    = 'Required Name Format: <shortName>-prod-'
 param location string                =  'eastus'
+param namingStandard array           =  json(loadTextContent('parameters/prod-naming.json'))
 
 var policyDeployment                 = '${initiativeName}-${guid(time)}'
-var namingStandard                   =  json(loadTextContent('parameters/prod-naming.json'))
+
 
 module namingPolicies 'modules/policy-naming.bicep' = [for i in range(0,length(namingStandard)): {
   name: replace(namingStandard[i].resource, ' ', '')
