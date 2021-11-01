@@ -12,14 +12,13 @@ param assignmentExclusions array     = [
 var policyDeployment                 = '${initiativeName}-${guid(time)}'
 
 module namingPolicies 'modules/policy-naming.bicep' = [for i in range(0,length(namingStandard)): {
-  name: '${replace(replace(namingStandard[i].resource, ' ', ''), ':', '')}-${guid(time)}'
+  name: '${split(namingStandard[i].resource, ':')[1]}-${guid(time)}'
   params: {
     policyName: 'Prod-Name-${replace(split(namingStandard[i].resource, ':')[0], ' ', '')}'
     description: 'Production naming format for ${namingStandard[i].resource}'
     nameMatch: namingStandard[i].nameFormat
     resourceType: namingStandard[i].resourceType
     mode: namingStandard[i].policyMode
-
   }
 }]
 
