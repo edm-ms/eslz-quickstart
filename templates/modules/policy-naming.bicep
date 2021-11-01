@@ -1,12 +1,12 @@
 targetScope = 'managementGroup'
 
 param resourceType string
-param nameMatch string
+param nameMatch array
 param mode string = 'Indexed'
 param description string
 param policyName string
 
-resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
+resource namePolicy 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
   name: policyName
   properties: {
     description: description
@@ -21,12 +21,7 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
           }
           {
             'not': {
-              'anyOf': [
-                {
-                  'field': 'name'
-                  'like': nameMatch
-                }
-              ]
+              'anyOf': nameMatch
             }
           }
         ]
@@ -38,4 +33,5 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
   }
 }
 
-output policyId string = policy.id
+
+output policyId string = namePolicy.id
