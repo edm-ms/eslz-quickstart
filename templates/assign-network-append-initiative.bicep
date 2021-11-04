@@ -3,15 +3,16 @@ targetScope = 'managementGroup'
 param resourceGroupName string  = 'rg-prod-eus-corpnetwork'
 param assignmentName string     = 'EUS-Network-Config'
 param location string           = 'eastus'
+param routes array              = json(loadTextContent('parameters/eastus-routes.json'))
+param nsgs array                = json(loadTextContent('parameters/eastus-nsgs.json'))
+param dnsServers array          = json(loadTextContent('parameters/dns-servers.json'))
+param nonCompliance string      = 'Deploy corporate NSG, route table, and DNS settings.'
 
 var managementGroupName         = managementGroup().name
-var routes                      = json(loadTextContent('parameters/eastus-routes.json'))
-var nsgs                        = json(loadTextContent('parameters/eastus-nsgs.json'))
 var tags                        = json(loadTextContent('parameters/networkwatcher-tags.json'))
-var dnsServers                  = json(loadTextContent('parameters/dns-servers.json'))
 var description                 = '${toUpper(location)} - Deploy corporate network policies'
 var policyName                  = '${toUpper(location)}-Network'
-var nonCompliance               = 'Deploy corporate NSG, route table, and DNS settings.'
+
 
 module networkPolicy 'modules/policy-network-configv3.bicep' = {
   name: 'create-NetworkAppend-policy'
