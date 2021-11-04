@@ -1,0 +1,222 @@
+targetScope = 'managementGroup'
+
+param mode string = 'All'
+param description string 
+param policyName string
+param tags object
+param resourceGroupName string 
+param location string
+param managementGroup string
+
+var locationUpper = toUpper(location)
+var locationShortName = replace(replace(replace(replace(replace(locationUpper, 'EAST', 'E'), 'WEST', 'W'), 'NORTH', 'N'), 'SOUTH', 'S'), 'CENTRAL', 'C')
+var deploymentName = 'NSG-and-Route-Policy-${locationUpper}'
+
+resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
+  name: policyName
+  properties: {
+    description: description
+    displayName: description
+    mode: mode
+    policyRule: {
+      'if': {
+        'allOf': [
+          {
+            'field': 'type'
+            'equals': 'Microsoft.Resources/subscriptions'
+          }
+        ]
+      }
+      'then': {
+        'effect': 'deployIfNotExists'
+        'details': {
+          'deploymentScope': 'subscription'
+          'existenceScope': 'resourceGroup'
+          'resourceGroupName': resourceGroupName
+          'type': 'Microsoft.Network/routeTables'
+          'roleDefinitionIds': [
+            '/providers/microsoft.authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
+          ]
+          'deployment': {
+            'location': location
+            'properties': {
+              'mode': 'incremental'
+              'template': {
+                '$schema': 'https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json'
+                'contentVersion': '1.0.0.0'
+                'parameters': {
+                  'location': {
+                    'type': 'string'
+                  }
+                  'routeTables': {
+                    'type': 'array'
+                  }
+                  'nsgList': {
+                    'type': 'array'
+                  }
+                }
+                'resources': [
+                  {
+                    'name': resourceGroupName
+                    'type': 'Microsoft.Resources/resourceGroups'
+                    'apiVersion': '2021-04-01'
+                    'location': '[parameters(\'location\')]'
+                    'dependsOn': []
+                    'tags': tags                           
+                  }
+                  {
+                    'type': 'Microsoft.Resources/deployments'
+                    'apiVersion': '2019-10-01'
+                    'name': deploymentName
+                    'resourceGroup': resourceGroupName
+                    'properties': {
+                      'expressionEvaluationOptions': {
+                        'scope': 'inner'
+                      }
+                      'mode': 'Incremental'
+                      'parameters': {
+                        'routeTables': {
+                          'value': '[parameters(\'routeTables\')]'
+                        }
+                        'nsgList': {
+                          'value': '[parameters(\'nsgList\')]'
+                        }
+                      }
+                      'template': {
+                        '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
+                        'contentVersion': '1.0.0.0'
+                        'parameters': {
+                          'routeTables': {
+                            'type': 'array'
+                          }
+                          'nsgList': {
+                            'type': 'array'
+                          }
+                        }
+                        'functions': []
+                        'resources': [
+                          {
+                            'type': 'Microsoft.Network/routeTables'
+                            'apiVersion': '2021-02-01'
+                            'name': '[parameters(\'routeTables\').name]'
+                            'location': '[parameters(\'routeTables\').location]'
+                            'properties': {
+                              'disableBgpRoutePropagation': true
+                              'routes': '[parameters(\'routeTables\').routes]'
+                            }
+                          }
+                          {
+                            'type': 'Microsoft.Network/networkSecurityGroups'
+                            'apiVersion': '2021-02-01'
+                            'name': '[parameters(\'nsgList\').name]'
+                            'location': '[parameters(\'nsgList\').location]'
+                            'properties': {
+                              'securityRules': '[parameters(\'nsgList\').securityRules]'
+                            }
+                          }                          
+                        ]
+                        'outputs': {
+                          'nsgPolicyParam': {
+                            'type': 'object'
+                            'value': {
+                              '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\').name), \'2021-02-01\', \'full\').location]': {
+                                'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\').name)]'
+                              }
+                              'disabled': {
+                                'id': ''
+                              }
+                            }
+                          }
+                          'routePolicyParam': {
+                            'type': 'object'
+                            'value': {
+                              '[reference(resourceId(\'Microsoft.Network/routeTables\', parameters(\'routeTables\').name), \'2021-02-01\', \'full\').location]': {
+                                'id': '[resourceId(\'Microsoft.Network/routeTables\', parameters(\'routeTables\').name)]'
+                              }
+                              'disabled': {
+                                'id': ''
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                    'dependsOn': [
+                      resourceGroupName
+                    ]
+                  }
+                  {
+                    'type': 'Microsoft.Authorization/policyAssignments'
+                    'apiVersion': '2021-06-01'
+                    'dependsOn': []
+                    'name': '${locationShortName}-Network-Config'
+                    'identity': {
+                      'type': 'SystemAssigned'
+                    }
+                    'location': location
+                    'properties': {
+                      'description': '${locationUpper} - Subscription network configuration'
+                      'displayName': '${locationUpper} - Subscription network configuration'
+                      'policyDefinitionId': '/providers/Microsoft.Management/managementGroups/${managementGroup}/providers/Microsoft.Authorization/policySetDefinitions/Network-Configuration'
+                      'enforcementMode': 'Default'
+                      'parameters': {
+                        'dns': {
+                          'value': '[parameters(\'dnsServers\')]'
+                        }
+                        'routeTable': {
+                          'value': '[reference(concat(subscription().id, \'/resourceGroups/\', \'${resourceGroupName}\', \'/providers/Microsoft.Resources/deployments/\', \'${deploymentName}\'), \'2019-10-01\').outputs.routePolicyParam.value]'
+                        }
+                        'nsg': {
+                          'value': '[reference(concat(subscription().id, \'/resourceGroups/\', \'${resourceGroupName}\', \'/providers/Microsoft.Resources/deployments/\', \'${deploymentName}\'), \'2019-10-01\').outputs.nsgPolicyParam.value]'
+                        }
+                      }
+                      'notScopes': ''
+                      'nonComplianceMessages': [
+                        {
+                          'message': 'Corporate network configuration'
+                        }
+                      ]
+                    }
+                  }                  
+                ]
+              }
+              'parameters': {
+                'routeTables': {
+                  'value': '[parameters(\'routeTables\')]'
+                }
+                'nsgList': {
+                  'value': '[parameters(\'nsgList\')]'
+                }
+                'dnsServers': {
+                  'value': '[parameters(\'dnsServers\')]'
+                }
+                'location': {
+                  'value': '[parameters(\'location\')]'
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    parameters: {
+      routeTables:{
+        type: 'Array'
+      }
+      nsgList:{
+        type: 'Array'
+      }
+      dnsServers:{
+        type: 'Array'
+      }
+      location:{
+        type: 'String'
+        metadata: {
+          strongType: 'location'
+        }
+      }
+    }
+  }
+}
+
+output policyId string = policy.id

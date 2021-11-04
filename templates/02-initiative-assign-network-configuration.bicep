@@ -13,15 +13,12 @@ var description                 = '${toUpper(location)} - Deploy corporate netwo
 var policyName                  = '${toUpper(location)}-Network'
 var nonCompliance               = 'Deploy corporate NSG, route table, and DNS settings.'
 
-module networkconfig 'modules/policy-network-configv2.bicep' = {
+module networkPolicy 'modules/policy-network-configv3.bicep' = {
   name: 'create-NetworkAppend-policy'
   params: {
     description: description
     policyName: policyName
     resourceGroupName: resourceGroupName
-    routeTables: routes
-    nsgList: nsgs
-    dnsServers: dnsServers
     tags: tags
     location: location
     managementGroup: managementGroupName
@@ -31,7 +28,7 @@ module networkconfig 'modules/policy-network-configv2.bicep' = {
 module waitForPolicy 'modules/delay.bicep' = {
   name: 'waitForPolicy'
   dependsOn: [
-    networkconfig
+    networkPolicy
   ]
 }
 
@@ -45,9 +42,23 @@ module assignPolicy 'modules/policy-assign-systemidentity.bicep' = {
     nonComplianceMessage: nonCompliance
     policyAssignmentEnforcementMode: 'Default'
     policyAssignmentName: assignmentName
-    policyDefinitionId: networkconfig.outputs.policyId
+    policyDefinitionId: networkPolicy.outputs.policyId
     policyDescription: description
     policyDisplayName: description
+    policyParameters: {
+      routeTables: {
+        value: routes
+      }
+      nsgList: {
+        value: nsgs
+      }
+      dnsServers: {
+        value: dnsServers
+      }
+      location: {
+        value: location
+      }
+    }
   }
 }
 
