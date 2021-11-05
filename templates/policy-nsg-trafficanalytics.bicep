@@ -5,6 +5,11 @@ param networkWatcherRg string   = 'NetworkWatcherRG'
 param logWorkspaceId string     = '<>'
 param connectivitySubId string  = '<>'
 param nsgStorageRg string       = 'rg-prod-eus-nsgflowlogs'
+@allowed([
+  'Standard_LRS'
+  'Standard_GRS'
+])
+param nsgStorageType string     = 'Standard_LRS'
 
 var definitionId = '/providers/Microsoft.Authorization/policyDefinitions/5e1cd26a-5090-4fdb-9d6a-84a90335e22d'
 var noncompliance = '${description} - ${nsgLocation}'
@@ -33,7 +38,7 @@ module storage 'modules/storage.bicep' = {
   ]
   name: 'create-NSG-storage'
   params: {
-    sku: 'Standard_LRS'
+    sku: nsgStorageType
     storageName: nsgStorageName
   }
 }

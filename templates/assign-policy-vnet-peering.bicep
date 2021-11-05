@@ -4,40 +4,29 @@ param assignmentName string     = 'EUS-Network-Peer'
 param location string           = 'eastus'
 param transitVnetId string      = ''
 param managedIdentityId string  = ''
+@allowed([
+  'Default'
+  'DoNotEnforce'
+])
+param policyEnforcement string  = 'Default'
+param policyName string         = 'Create-VNetPeer'
+param nonCompliance string      = 'Connect VNet to corporate transit network'
 
-var peerPolicy                  = json(loadTextContent('policy/policy-vnet-peering.json'))
 var description                 = '${toUpper(location)} - Create VNet peering with transit VNet'
-var nonCompliance               = 'Connect VNet to corporate transit network'
 
-
-module vnetPeering 'modules/policy-definition.bicep' = {
-  name: 'create-vnetPeer-policy'
-  params: {
-    policyDescription: peerPolicy.Description
-    policyDisplayName: peerPolicy.DisplayName
-    policyName: peerPolicy.Name
-    policyParameters: peerPolicy.parameters
-    policyRule: peerPolicy.policyRule
-    mode: peerPolicy.mode
-  }
-}
-
-module delayForPolicy 'modules/delay.bicep' = {
-  name: 'waitForPolicy'
+resource vnetPeerPolicy 'Microsoft.Authorization/policyDefinitions@2021-06-01' existing = {
+  name: policyName
 }
 
 module assignPolicy 'modules/policy-assign-managedidentity.bicep' = {
   name: 'assign-VNet-policy'
-  dependsOn: [
-    delayForPolicy
-  ]
   params: {
     identityResourceId: managedIdentityId
     location: location
     nonComplianceMessage: nonCompliance
-    policyAssignmentEnforcementMode: 'Default'
+    policyAssignmentEnforcementMode: policyEnforcement
     policyAssignmentName: assignmentName
-    policyDefinitionId: vnetPeering.outputs.policyId
+    policyDefinitionId: vnetPeerPolicy.id
     policyDescription: description
     policyParameters: {
       location: {
