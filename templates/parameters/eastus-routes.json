@@ -1,4 +1,3 @@
-[
     {
         "name": "rt-prod-eus-transit",
         "location": "eastus",
@@ -28,4 +27,3 @@
             }                     
         ]
     }
-]

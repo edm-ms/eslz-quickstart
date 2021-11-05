@@ -1,8 +1,8 @@
 targetScope = 'managementGroup'
 
-var dnsPolicy           = json(loadTextContent('policy/policy-append-dns.json'))
-var routePolicy         = json(loadTextContent('policy/policy-attach-routetable.json'))
-var nsgPolicy           = json(loadTextContent('policy/policy-attach-nsg.json'))
+param dnsPolicy object          = json(loadTextContent('policy/policy-append-dns.json'))
+param routePolicy object        = json(loadTextContent('policy/policy-attach-routetable.json'))
+param nsgPolicy object          = json(loadTextContent('policy/policy-attach-nsg.json'))
 
 module dnsAppendPolicy 'modules/policy-definition.bicep' = {
   name: 'create-DNSAppend-Policy'
@@ -40,8 +40,20 @@ module nsgAttach 'modules/policy-definition.bicep' = {
   }
 }
 
+module delay 'modules/delay.bicep' = {
+  name: 'delay-for-Policy'
+  dependsOn: [
+    dnsAppendPolicy
+    routeTableAttach
+    nsgAttach
+  ]
+}
+
 module networkInitiative 'modules/policy-initiative.bicep' = {
   name: 'create-network-initiative'
+  dependsOn: [
+    delay
+  ]
   params: {
     description: 'This set of policy deploys a defined network configuration to all virtual networks in a subscription.'
     displayName: 'Subscription network configuration'

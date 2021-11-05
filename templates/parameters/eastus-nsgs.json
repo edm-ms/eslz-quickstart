@@ -1,4 +1,3 @@
-[
     {
         "name": "nsg-prod-eus-transit",
         "location": "eastus",
@@ -58,5 +57,3 @@
             }
         ]
     }
-]
-

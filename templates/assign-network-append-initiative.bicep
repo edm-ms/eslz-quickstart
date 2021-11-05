@@ -3,8 +3,8 @@ targetScope = 'managementGroup'
 param resourceGroupName string  = 'rg-prod-eus-corpnetwork'
 param assignmentName string     = 'EUS-Network-Config'
 param location string           = 'eastus'
-param routes array              = json(loadTextContent('parameters/eastus-routes.json'))
-param nsgs array                = json(loadTextContent('parameters/eastus-nsgs.json'))
+param routes object             = json(loadTextContent('parameters/eastus-routes.json'))
+param nsgs object               = json(loadTextContent('parameters/eastus-nsgs.json'))
 param dnsServers array          = json(loadTextContent('parameters/dns-servers.json'))
 param nonCompliance string      = 'Deploy corporate NSG, route table, and DNS settings.'
 
@@ -47,10 +47,10 @@ module assignPolicy 'modules/policy-assign-systemidentity.bicep' = {
     policyDescription: description
     policyDisplayName: description
     policyParameters: {
-      routeTables: {
+      routeTable: {
         value: routes
       }
-      nsgList: {
+      nsg: {
         value: nsgs
       }
       dnsServers: {

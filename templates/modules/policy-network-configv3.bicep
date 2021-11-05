@@ -48,11 +48,14 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                   'location': {
                     'type': 'string'
                   }
-                  'routeTables': {
+                  'routeTable': {
+                    'type': 'object'
+                  }
+                  'dnsServers': {
                     'type': 'array'
                   }
-                  'nsgList': {
-                    'type': 'array'
+                  'nsg': {
+                    'type': 'object'
                   }
                 }
                 'resources': [
@@ -75,22 +78,22 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                       }
                       'mode': 'Incremental'
                       'parameters': {
-                        'routeTables': {
-                          'value': '[parameters(\'routeTables\')]'
+                        'routeTable': {
+                          'value': '[parameters(\'routeTable\')]'
                         }
-                        'nsgList': {
-                          'value': '[parameters(\'nsgList\')]'
+                        'nsg': {
+                          'value': '[parameters(\'nsg\')]'
                         }
                       }
                       'template': {
                         '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
                         'contentVersion': '1.0.0.0'
                         'parameters': {
-                          'routeTables': {
-                            'type': 'array'
+                          'routeTable': {
+                            'type': 'object'
                           }
-                          'nsgList': {
-                            'type': 'array'
+                          'nsg': {
+                            'type': 'object'
                           }
                         }
                         'functions': []
@@ -98,20 +101,20 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                           {
                             'type': 'Microsoft.Network/routeTables'
                             'apiVersion': '2021-02-01'
-                            'name': '[parameters(\'routeTables\').name]'
-                            'location': '[parameters(\'routeTables\').location]'
+                            'name': '[parameters(\'routeTable\').name]'
+                            'location': '[parameters(\'routeTable\').location]'
                             'properties': {
                               'disableBgpRoutePropagation': true
-                              'routes': '[parameters(\'routeTables\').routes]'
+                              'routes': '[parameters(\'routeTable\').routes]'
                             }
                           }
                           {
                             'type': 'Microsoft.Network/networkSecurityGroups'
                             'apiVersion': '2021-02-01'
-                            'name': '[parameters(\'nsgList\').name]'
-                            'location': '[parameters(\'nsgList\').location]'
+                            'name': '[parameters(\'nsg\').name]'
+                            'location': '[parameters(\'nsg\').location]'
                             'properties': {
-                              'securityRules': '[parameters(\'nsgList\').securityRules]'
+                              'securityRules': '[parameters(\'nsg\').securityRules]'
                             }
                           }                          
                         ]
@@ -119,8 +122,8 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                           'nsgPolicyParam': {
                             'type': 'object'
                             'value': {
-                              '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\').name), \'2021-02-01\', \'full\').location]': {
-                                'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsgList\').name)]'
+                              '[reference(resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsg\').name), \'2021-02-01\', \'full\').location]': {
+                                'id': '[resourceId(\'Microsoft.Network/networkSecurityGroups\', parameters(\'nsg\').name)]'
                               }
                               'disabled': {
                                 'id': ''
@@ -130,8 +133,8 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                           'routePolicyParam': {
                             'type': 'object'
                             'value': {
-                              '[reference(resourceId(\'Microsoft.Network/routeTables\', parameters(\'routeTables\').name), \'2021-02-01\', \'full\').location]': {
-                                'id': '[resourceId(\'Microsoft.Network/routeTables\', parameters(\'routeTables\').name)]'
+                              '[reference(resourceId(\'Microsoft.Network/routeTables\', parameters(\'routeTable\').name), \'2021-02-01\', \'full\').location]': {
+                                'id': '[resourceId(\'Microsoft.Network/routeTables\', parameters(\'routeTable\').name)]'
                               }
                               'disabled': {
                                 'id': ''
@@ -181,11 +184,11 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
                 ]
               }
               'parameters': {
-                'routeTables': {
-                  'value': '[parameters(\'routeTables\')]'
+                'routeTable': {
+                  'value': '[parameters(\'routeTable\')]'
                 }
-                'nsgList': {
-                  'value': '[parameters(\'nsgList\')]'
+                'nsg': {
+                  'value': '[parameters(\'nsg\')]'
                 }
                 'dnsServers': {
                   'value': '[parameters(\'dnsServers\')]'
@@ -200,11 +203,11 @@ resource policy 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
       }
     }
     parameters: {
-      routeTables:{
-        type: 'Array'
+      routeTable:{
+        type: 'Object'
       }
-      nsgList:{
-        type: 'Array'
+      nsg:{
+        type: 'Object'
       }
       dnsServers:{
         type: 'Array'
