@@ -18,7 +18,23 @@
             },
             {
               "field": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings[*].remoteVirtualNetwork.id",
-              "exists": false
+              "notContains": "[parameters('transitVnetId')]"
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.Network/virtualNetworks"
+            },
+            {
+              "field": "location",
+              "matchInsensitively": "[parameters('location')]"
+            },
+            {
+              "field": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/remoteVirtualNetwork.id",
+              "notContains": "[parameters('transitVnetId')]"
             }
           ]
         }
