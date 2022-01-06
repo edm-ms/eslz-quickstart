@@ -1,82 +1,97 @@
 [
-    {
-      "resource": "ACR",
-      "zoneName": "privatelink.azurecr.io",
-      "groupId": "registry"
-    },
-    {
-      "resource": "ADLS",
-      "zoneName": "privatelink.dfs.core.windows.net",
-      "groupId": "dfs"
-    },
-    {
-      "resource": "AKS-EastUs",
-      "zoneName": "privatelink.eastus.azmk8s.io",
-      "groupId": "management"
-    },
-    {
-      "resource": "AKS-WestUs",
-      "zoneName": "privatelink.westus.azmk8s.io",
-      "groupId": "management"
-    },
-    {
-      "resource": "AppService",
-      "zoneName": "privatelink.azurewebsites.net",
-      "groupId": "sites"
-    },
-    {
-      "resource": "Batch-EastUs",
-      "zoneName": "privatelink.eastus.batch.azure.com",
-      "groupId": "batchAccount"
-    },
-    {
-      "resource": "Batch-WestUs",
-      "zoneName": "privatelink.westus.batch.azure.com",
-      "groupId": "batchAccount"
-    },
-    {
-      "resource": "Blob",
-      "zoneName": "privatelink.blob.core.windows.net",
-      "groupId": "blob"
-    },
-    {
-      "resource": "Cosmos",
-      "zoneName": "privatelink.documents.azure.com",
-      "groupId": "sql"
-    },
-    {
-      "resource": "File",
-      "zoneName": "privatelink.file.core.windows.net",
-      "groupId": "file"
-    },
-    {
-      "resource": "FileSync",
-      "zoneName": "privatelink.afs.azure.net",
-      "groupId": "afs"
-    },
-    {
-      "resource": "KeyVault",
-      "zoneName": "privatelink.vaultcore.azure.net",
-      "groupId": "vault"
-    },
-    {
-      "resource": "MySQL",
-      "zoneName": "privatelink.mysql.database.azure.com",
-      "groupId": "mysqlServer"
-    },
-    {
-      "resource": "PostgreSQL",
-      "zoneName": "privatelink.postgres.database.azure.com",
-      "groupId": "postgresqlServer"
-    },
-    {
-      "resource": "SQL",
-      "zoneName": "privatelink.database.windows.net",
-      "groupId": "SQLServer"
-    },
-    {
-      "resource": "Synapse",
-      "zoneName": "privatelink.sql.azuresynapse.net",
-      "groupId": "Dev"
-    }
-  ]
+  {
+    "groupId": "registry",
+    "resource": "ACR",
+    "zoneName": "privatelink.azurecr.io"
+  },
+  {
+    "groupId": "dfs",
+    "resource": "ADLS",
+    "zoneName": "privatelink.dfs.core.windows.net"
+  },
+  {
+    "groupId": "management",
+    "resource": "AKS-EastUs",
+    "zoneName": "privatelink.eastus.azmk8s.io"
+  },
+  {
+    "groupId": "management",
+    "resource": "AKS-WestUs",
+    "zoneName": "privatelink.westus.azmk8s.io"
+  },
+  {
+    "groupId": "sites",
+    "resource": "AppService",
+    "zoneName": "privatelink.azurewebsites.net"
+  },
+  {
+    "groupId": "batchAccount",
+    "resource": "Batch-EastUs",
+    "zoneName": "privatelink.eastus.batch.azure.com"
+  },
+  {
+    "groupId": "batchAccount",
+    "resource": "Batch-WestUs",
+    "zoneName": "privatelink.westus.batch.azure.com"
+  },
+  {
+    "groupId": "blob",
+    "resource": "Blob",
+    "zoneName": "privatelink.blob.core.windows.net"
+  },
+  {
+    "groupId": "sql",
+    "resource": "Cosmos",
+    "zoneName": "privatelink.documents.azure.com"
+  },
+  {
+    "groupId": "topic",
+    "resource": "EventGrid",
+    "zoneName": "privatelink.eventgrid.azure.net"
+  },
+  {
+    "groupId": "namespace",
+    "resource": "EventHub-ServiceBus",
+    "zoneName": "privatelink.servicebus.windows.net"
+  },
+  {
+    "groupId": "file",
+    "resource": "File",
+    "zoneName": "privatelink.file.core.windows.net"
+  },
+  {
+    "groupId": "afs",
+    "resource": "FileSync",
+    "zoneName": "privatelink.afs.azure.net"
+  },
+  {
+    "groupId": "iotHub",
+    "resource": "IoT-Hub",
+    "zoneName": "privatelink.azure-devices.net"
+  },
+  {
+    "groupId": "vault",
+    "resource": "KeyVault",
+    "zoneName": "privatelink.vaultcore.azure.net"
+  },
+  {
+    "groupId": "mysqlServer",
+    "resource": "MySQL",
+    "zoneName": "privatelink.mysql.database.azure.com"
+  },
+  {
+    "groupId": "postgresqlServer",
+    "resource": "PostgreSQL",
+    "zoneName": "privatelink.postgres.database.azure.com"
+  },
+  {
+    "groupId": "SQLServer",
+    "resource": "SQL",
+    "zoneName": "privatelink.database.windows.net"
+  },
+  {
+    "groupId": "Dev",
+    "resource": "Synapse",
+    "zoneName": "privatelink.sql.azuresynapse.net"
+  }
+]
